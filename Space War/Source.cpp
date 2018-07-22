@@ -1,12 +1,13 @@
 #include <d3dx9.h>
+#include <vector>
 #include "Core.h"
+#include "Race.h"
+#include "Planet.h"
 
-enum class Race {
-	Red, Green, Blue,
-};
 
 constexpr float SHIP_SIZE = 5.0f;
 float r1, r2;
+std::vector<Planet*> planets;
 
 void OnKeyDown(int key) {
 	if (key == VK_ESCAPE)
@@ -26,20 +27,24 @@ void DrawShip(Race race, float x, float y) {
 	Core::DrawLine(x - hs, y + hs, x + hs, y - hs, color);
 }
 
-void OnRendering() {
-	Core::DrawImage(20, 20, 128, 128, "test", r1);
+void OnRendering(LPDIRECT3DDEVICE9 device) {
+	/*Core::DrawImage(20, 20, 128, 128, "test", r1);
 	Core::DrawImage(200, 20, 128, 128, "test1", r2);
 
 	DrawShip(Race::Blue, 20, 300);
 	DrawShip(Race::Red, 120, 300);
-	DrawShip(Race::Green, 220, 300);
+	DrawShip(Race::Green, 220, 300);*/
+
+	for (auto p : planets) {
+		p->Draw(device);
+	}
 }
 
 bool LoadImages() {
-	if (!Core::LoadTexture("test", R"(C:\Users\igoro\source\repos\Space War\textures\planet_a.png)"))
+	if (!Core::LoadTexture("red planet", R"(C:\Users\igoro\source\repos\Space War\textures\planet_a.png)"))
 		return false;
 
-	if (!Core::LoadTexture("test1", R"(C:\Users\igoro\source\repos\Space War\textures\planet_b.png)"))
+	if (!Core::LoadTexture("blue planet", R"(C:\Users\igoro\source\repos\Space War\textures\planet_b.png)"))
 		return false;
 
 	return true;
@@ -48,6 +53,24 @@ bool LoadImages() {
 void OnUpdate(float elapsedTime) {
 	r1 += 17.f * elapsedTime*100;
 	r2 += 3.f * elapsedTime*100;
+
+	for (auto p : planets) {
+		p->Update(elapsedTime);
+	}
+}
+
+void ClearPlanets() {
+	for (auto p : planets) {
+		delete p;
+	}
+	planets.clear();
+}
+void LoadGame() {
+	ClearPlanets();
+	auto p = new Planet(Core::GetDevice(), { 100,100 }, Race::Red);
+	p->SetPosition({ -200, 0 });
+	planets.push_back(p);
+	planets.push_back(new Planet(Core::GetDevice(), { 70,70 }, Race::Blue));
 }
 
 int WINAPI WinMain(HINSTANCE hinstance, HINSTANCE, LPSTR, int) {
@@ -56,8 +79,11 @@ int WINAPI WinMain(HINSTANCE hinstance, HINSTANCE, LPSTR, int) {
 	desc.OnRendering = OnRendering;
 	desc.OnUpdate = OnUpdate;
 
+	srand(timeGetTime());
+
 	if (Core::Initialize(hinstance, &desc)) {
 		if (LoadImages()) {
+			LoadGame();
 			Core::Run();
 		}
 	}

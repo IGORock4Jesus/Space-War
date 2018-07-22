@@ -5,7 +5,7 @@
 namespace Core {
 	struct Desc
 	{
-		void(*OnRendering)();
+		void(*OnRendering)(LPDIRECT3DDEVICE9 device);
 		void(*OnKeyDown)(int key);
 		void(*OnUpdate)(float elapsedTime);
 	};
@@ -18,6 +18,7 @@ namespace Core {
 	LPDIRECT3D9 GetDirect();
 	LPDIRECT3DDEVICE9 GetDevice();
 	void CloseWindow();
+	LPDIRECT3DTEXTURE9 FindTexture(std::string name);
 
 	bool LoadTexture(std::string name, std::string path);
 	void DrawImage(float x, float y, float w, float h, std::string name, float angle = 0.0f);

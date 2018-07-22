@@ -17,7 +17,6 @@ namespace Core {
 	Desc desc;
 	std::map<std::string, LPDIRECT3DTEXTURE9> textures;
 	D3DXMATRIX viewTransform, projTransform;
-	LPD3DXSPRITE sprite;
 
 	LRESULT CALLBACK WndProc(HWND h, UINT m, WPARAM w, LPARAM l) {
 		switch (m)
@@ -70,6 +69,12 @@ namespace Core {
 			return false;
 
 		device3d->SetRenderState(D3DRS_LIGHTING, FALSE);
+		// Устанавливаем коэффициенты смешивания таким образом,
+		// чтобы альфа-компонента определяла прозрачность
+		device3d->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+		device3d->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+
+		device3d->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 
 		return true;
 	}
@@ -88,8 +93,6 @@ namespace Core {
 
 		D3DXMatrixLookAtRH(&viewTransform, &D3DXVECTOR3(0.0f, 0.0f, -10.0f), &D3DXVECTOR3(0.0f, 0.0f, 0.0f), &D3DXVECTOR3(0.0f, -1.0f, 0.0f));
 		D3DXMatrixOrthoOffCenterRH(&projTransform, -400, 400, 300, -300, 0.1f, 100000.0f);
-
-		D3DXCreateSprite(device3d, &sprite);
 
 		return true;
 	}
@@ -114,11 +117,11 @@ namespace Core {
 		device3d->Clear(0, nullptr, D3DCLEAR_TARGET, 0xff404040, 1.0f, 0);
 		device3d->BeginScene();
 
-		/*device3d->SetTransform(D3DTS_VIEW, &viewTransform);
-		device3d->SetTransform(D3DTS_PROJECTION, &projTransform);*/
+		device3d->SetTransform(D3DTS_VIEW, &viewTransform);
+		device3d->SetTransform(D3DTS_PROJECTION, &projTransform);
 
 		if (desc.OnRendering)
-			desc.OnRendering();
+			desc.OnRendering(device3d);
 
 		device3d->EndScene();
 		device3d->Present(0, 0, 0, 0);
@@ -153,6 +156,11 @@ namespace Core {
 		DestroyWindow(hwnd);
 	}
 
+	LPDIRECT3DTEXTURE9 FindTexture(std::string name)
+	{
+		return textures[name];
+	}
+
 
 	bool LoadTexture(std::string name, std::string path) {
 		LPDIRECT3DTEXTURE9 texture;
@@ -173,7 +181,7 @@ namespace Core {
 		device3d->SetTexture(0, textures[name]);
 		device3d->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, vs, sizeof(Vertex));*/
 
-		if (SUCCEEDED(sprite->Begin(D3DXSPRITE_ALPHABLEND))) {
+		/*if (SUCCEEDED(sprite->Begin(D3DXSPRITE_ALPHABLEND))) {
 			D3DXVECTOR3 pos{ x,y,0 };
 			RECT r{ x,y,x + w,y + h };
 
@@ -184,7 +192,7 @@ namespace Core {
 
 			sprite->Draw(textures[name], 0, 0, 0, 0xffffffff);
 			sprite->End();
-		}
+		}*/
 	}
 	void DrawLine(float x1, float y1, float x2, float y2, D3DCOLOR color)
 	{
