@@ -27,8 +27,8 @@ void DrawShip(Race race, float x, float y) {
 }
 
 void OnRendering() {
-	Core::DrawImage(20, 20, 100, 100, "test", r1);
-	Core::DrawImage(200, 20, 100, 100, "test1", r2);
+	Core::DrawImage(20, 20, 128, 128, "test", r1);
+	Core::DrawImage(200, 20, 128, 128, "test1", r2);
 
 	DrawShip(Race::Blue, 20, 300);
 	DrawShip(Race::Red, 120, 300);

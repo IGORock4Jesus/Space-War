@@ -16,9 +16,8 @@ namespace Core {
 	LPCSTR windowClass = "GAME WINDOW";
 	Desc desc;
 	std::map<std::string, LPDIRECT3DTEXTURE9> textures;
-	LPD3DXSPRITE sprite;
 	D3DXMATRIX viewTransform, projTransform;
-
+	LPD3DXSPRITE sprite;
 
 	LRESULT CALLBACK WndProc(HWND h, UINT m, WPARAM w, LPARAM l) {
 		switch (m)
@@ -87,6 +86,9 @@ namespace Core {
 		if (!InitializeRenderer())
 			return false;
 
+		D3DXMatrixLookAtRH(&viewTransform, &D3DXVECTOR3(0.0f, 0.0f, -10.0f), &D3DXVECTOR3(0.0f, 0.0f, 0.0f), &D3DXVECTOR3(0.0f, -1.0f, 0.0f));
+		D3DXMatrixOrthoOffCenterRH(&projTransform, -400, 400, 300, -300, 0.1f, 100000.0f);
+
 		D3DXCreateSprite(device3d, &sprite);
 
 		return true;
@@ -111,6 +113,9 @@ namespace Core {
 	void Rendering() {
 		device3d->Clear(0, nullptr, D3DCLEAR_TARGET, 0xff404040, 1.0f, 0);
 		device3d->BeginScene();
+
+		/*device3d->SetTransform(D3DTS_VIEW, &viewTransform);
+		device3d->SetTransform(D3DTS_PROJECTION, &projTransform);*/
 
 		if (desc.OnRendering)
 			desc.OnRendering();
