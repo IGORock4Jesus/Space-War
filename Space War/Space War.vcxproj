@@ -156,6 +156,7 @@
     <ClCompile Include="Core.cpp" />
     <ClCompile Include="ECS.cpp" />
     <ClCompile Include="Planet.cpp" />
+    <ClCompile Include="PlanetRotation.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="Sprite.cpp" />
   </ItemGroup>
@@ -163,6 +164,7 @@
     <ClInclude Include="Core.h" />
     <ClInclude Include="ECS.h" />
     <ClInclude Include="Planet.h" />
+    <ClInclude Include="PlanetRotation.h" />
     <ClInclude Include="Race.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="Transform.h" />

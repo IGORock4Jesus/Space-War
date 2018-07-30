@@ -8,27 +8,36 @@ namespace ECS
 	constexpr size_t MAX_COMPONENTS = 100;
 	constexpr size_t MAX_ENTITY_COMPONENTS = 8;
 
-	class Component {
-		const size_t hashType;
+	template <typename T>
+	size_t GetComponentHash() {
+		static const size_t hash = typeid(T).hash_code();
+		return hash;
+	}
 
+	class ComponentBase {
+		const size_t hashType;
 	public:
-		Component(size_t hashType)
+		ComponentBase(size_t hashType)
 			: hashType{ hashType } {}
 
-		virtual ~Component() {}
+		virtual ~ComponentBase() {}
+	};
 
-		const size_t GetHashType() const {
-			return hashType;
-		}
+	template <typename T>
+	class Component : public ComponentBase {
+	public:
+		Component() 
+			: ComponentBase(GetComponentHash<T>())
+		{}
 	};
 
 	class Entity {
 		std::string name;
-		Component* components[MAX_ENTITY_COMPONENTS];
+		ComponentBase* components[MAX_ENTITY_COMPONENTS];
 
 	public:
 		Entity() {
-			memset(components, 0, sizeof(Component*) * MAX_ENTITY_COMPONENTS);
+			memset(components, 0, sizeof(ComponentBase*) * MAX_ENTITY_COMPONENTS);
 		}
 
 		void SetName(std::string name) { this->name = name; }
@@ -36,7 +45,7 @@ namespace ECS
 
 		template <typename T>
 		void AddComponent(T* c) {
-			static_assert(std::is_base_of<Component, T>::value, "T должен наследовать ECS::Component!");
+			static_assert(std::is_base_of<ComponentBase, T>::value, "T должен наследовать ECS::Component!");
 
 			for (size_t i = 0; i < MAX_ENTITY_COMPONENTS; i++)
 			{
@@ -51,7 +60,7 @@ namespace ECS
 
 		template <typename T>
 		T* GetComponent() {
-			static_assert(std::is_base_of<Component, T>::value, "T должен наследовать ECS::Component!");
+			static_assert(std::is_base_of<ComponentBase, T>::value, "T должен наследовать ECS::Component!");
 
 			auto tHash = typeid(T).hash_code();
 
@@ -67,12 +76,14 @@ namespace ECS
 	};
 
 	class SystemBase {
-
+	public:
+		virtual void Update(float elapsedTime) = 0;
+		virtual void Render(LPDIRECT3DDEVICE9 device) = 0;
 	};
 
 	template <typename T>
 	class System : public SystemBase {
-		static_assert(std::is_base_of<Component, T>::value, "T должен наследовать ECS::Component!");
+		static_assert(std::is_base_of<ComponentBase, T>::value, "T должен наследовать ECS::Component!");
 
 		T* components[MAX_COMPONENTS]{ 0 };
 
@@ -81,9 +92,26 @@ namespace ECS
 			*components = this->components;
 		}
 
+		virtual void OnComponentUpdate(T* component, float elapsedTime) {}
+		virtual void OnComponentRender(T* component, LPDIRECT3DDEVICE9 device) {}
+
 	public:
-		virtual void Update(int elapsedTime) {}
-		virtual void Render(LPDIRECT3DDEVICE9 device) {}
+		virtual void Update(float elapsedTime) final {
+			for (size_t i = 0; i < MAX_COMPONENTS; i++)
+			{
+				if (components[i]) {
+					OnComponentUpdate(components[i], elapsedTime);
+				}
+			}
+		}
+		virtual void Render(LPDIRECT3DDEVICE9 device) final {
+			for (size_t i = 0; i < MAX_COMPONENTS; i++)
+			{
+				if (components[i]) {
+					OnComponentRender(components[i], device);
+				}
+			}
+		}
 
 		void Add(T* component) {
 			for (size_t i = 0; i < MAX_COMPONENTS; i++)
@@ -98,9 +126,4 @@ namespace ECS
 		}
 	};
 
-	template <typename T>
-	size_t GetComponentHash() {
-		static const size_t hash = typeid(T).hash_code();
-		return hash;
-	}
 }

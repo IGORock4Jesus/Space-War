@@ -4,11 +4,18 @@
 #include "Race.h"
 #include "Planet.h"
 #include "Sprite.h"
+#include "PlanetRotation.h"	
+
 
 constexpr float SHIP_SIZE = 5.0f;
 float r1, r2;
 std::vector<Planet*> planets;
+
+TransformSystem transformSystem;
 SpriteSystem spriteSystem;
+PlanetRotationSystem planetRotationSystem;
+std::vector<ECS::SystemBase*> systems;
+
 ECS::Entity* entity;
 
 
@@ -56,12 +63,15 @@ bool LoadImages() {
 }
 
 void OnUpdate(float elapsedTime) {
-	r1 += 17.f * elapsedTime*100;
-	r2 += 3.f * elapsedTime*100;
+	r1 += 17.f * elapsedTime * 100;
+	r2 += 3.f * elapsedTime * 100;
 
 	for (auto p : planets) {
 		p->Update(elapsedTime);
 	}
+
+	for (auto s : systems)
+		s->Update(elapsedTime);
 }
 
 void ClearPlanets() {
@@ -71,23 +81,36 @@ void ClearPlanets() {
 	planets.clear();
 }
 void LoadGame() {
+	systems = {
+		&transformSystem,
+		&spriteSystem,
+		&planetRotationSystem
+	};
+
+
 	ClearPlanets();
-	auto p = new Planet(Core::GetDevice(), { 100,100 }, Race::Red);
+	auto p = new Planet(Core::GetDevice(), { 100, 100 }, Race::Red);
 	p->SetPosition({ -200, 0 });
 	planets.push_back(p);
-	planets.push_back(new Planet(Core::GetDevice(), { 70,70 }, Race::Blue));
+	planets.push_back(new Planet(Core::GetDevice(), { 70, 70 }, Race::Blue));
 
 	Transform* t = new Transform();
 	t->SetPosition({ 20,20 });
+	transformSystem.Add(t);
 
-	Sprite* s = new Sprite(t, Core::GetDevice(), { 100,100 });
+	Sprite* s = new Sprite(t, Core::GetDevice(), { 100, 100 });
 	s->SetTexture(Core::FindTexture("red planet"));
-	
+	spriteSystem.Add(s);
+
+	PlanetRotation* rotation = new PlanetRotation(t);
+	rotation->SetSpeed(-100.0f);
+	planetRotationSystem.Add(rotation);
+
 	entity = new ECS::Entity();
 	entity->AddComponent(t);
 	entity->AddComponent(s);
+	entity->AddComponent(rotation);
 
-	spriteSystem.Add(s);
 }
 
 int WINAPI WinMain(HINSTANCE hinstance, HINSTANCE, LPSTR, int) {

@@ -6,6 +6,7 @@
     <ClCompile Include="Planet.cpp" />
     <ClCompile Include="ECS.cpp" />
     <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="PlanetRotation.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core.h" />
@@ -15,5 +16,6 @@
     <ClInclude Include="ECS.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="Transform.h" />
+    <ClInclude Include="PlanetRotation.h" />
   </ItemGroup>
 </Project>

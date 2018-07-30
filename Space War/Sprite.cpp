@@ -2,8 +2,8 @@
 #include "Vertex.h"
 
 
-Sprite::Sprite(Transform* transform, LPDIRECT3DDEVICE9 device,D3DXVECTOR2 size)
-	: ECS::Component(ECS::GetComponentHash<Sprite>()), transform{ transform }
+Sprite::Sprite(Transform* transform, LPDIRECT3DDEVICE9 device, D3DXVECTOR2 size)
+	: transform{ transform }
 {
 	device->CreateVertexBuffer(sizeof(Vertex) * 4, D3DUSAGE_WRITEONLY, D3DFVF_XYZ | D3DFVF_TEX1, D3DPOOL_DEFAULT, &vb, nullptr);
 
@@ -35,14 +35,7 @@ void Sprite::Draw(LPDIRECT3DDEVICE9 device)
 	device->DrawPrimitive(D3DPT_TRIANGLEFAN, 0, 2);
 }
 
-void SpriteSystem::Render(LPDIRECT3DDEVICE9 device)
+void SpriteSystem::OnComponentRender(Sprite* component, LPDIRECT3DDEVICE9 device)
 {
-	Sprite** sprites;
-	GetComponents(&sprites);
-	for (size_t i = 0; i < ECS::MAX_COMPONENTS; ++i) {
-		auto sprite = sprites[i];
-		if (sprite) {
-			sprite->Draw(device);
-		}
-	}
+	component->Draw(device);
 }

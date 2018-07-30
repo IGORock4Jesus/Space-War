@@ -5,7 +5,7 @@
 #include "Transform.h"
 
 
-class Sprite : public ECS::Component
+class Sprite : public ECS::Component<Sprite>
 {
 	LPDIRECT3DTEXTURE9 texture{ nullptr };
 	LPDIRECT3DVERTEXBUFFER9 vb{ nullptr };
@@ -16,13 +16,12 @@ public:
 	~Sprite();
 
 	void Draw(LPDIRECT3DDEVICE9 device);
-
-	void SetTexture(LPDIRECT3DTEXTURE9 tex) { texture = tex; }
+	void SetTexture(LPDIRECT3DTEXTURE9 t) { texture = t; }
 };
 
 class SpriteSystem : public ECS::System<Sprite>
 {
-public:
-	virtual void Render(LPDIRECT3DDEVICE9 device) override;
+private:
+	virtual void OnComponentRender(Sprite* component, LPDIRECT3DDEVICE9 device) override;
 };
 
