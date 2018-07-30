@@ -3,11 +3,14 @@
 #include "Core.h"
 #include "Race.h"
 #include "Planet.h"
-
+#include "Sprite.h"
 
 constexpr float SHIP_SIZE = 5.0f;
 float r1, r2;
 std::vector<Planet*> planets;
+SpriteSystem spriteSystem;
+ECS::Entity* entity;
+
 
 void OnKeyDown(int key) {
 	if (key == VK_ESCAPE)
@@ -38,6 +41,8 @@ void OnRendering(LPDIRECT3DDEVICE9 device) {
 	for (auto p : planets) {
 		p->Draw(device);
 	}
+
+	spriteSystem.Render(device);
 }
 
 bool LoadImages() {
@@ -71,6 +76,18 @@ void LoadGame() {
 	p->SetPosition({ -200, 0 });
 	planets.push_back(p);
 	planets.push_back(new Planet(Core::GetDevice(), { 70,70 }, Race::Blue));
+
+	Transform* t = new Transform();
+	t->SetPosition({ 20,20 });
+
+	Sprite* s = new Sprite(t, Core::GetDevice(), { 100,100 });
+	s->SetTexture(Core::FindTexture("red planet"));
+	
+	entity = new ECS::Entity();
+	entity->AddComponent(t);
+	entity->AddComponent(s);
+
+	spriteSystem.Add(s);
 }
 
 int WINAPI WinMain(HINSTANCE hinstance, HINSTANCE, LPSTR, int) {

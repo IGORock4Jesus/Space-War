@@ -2,12 +2,10 @@
 #include "Vertex.h"
 
 
-Sprite::Sprite(LPDIRECT3DDEVICE9 device,D3DXVECTOR2 size)
-	: ECS::Component(ECS::GetComponentHash<Sprite>())
+Sprite::Sprite(Transform* transform, LPDIRECT3DDEVICE9 device,D3DXVECTOR2 size)
+	: ECS::Component(ECS::GetComponentHash<Sprite>()), transform{ transform }
 {
 	device->CreateVertexBuffer(sizeof(Vertex) * 4, D3DUSAGE_WRITEONLY, D3DFVF_XYZ | D3DFVF_TEX1, D3DPOOL_DEFAULT, &vb, nullptr);
-	D3DXMatrixIdentity(&transform);
-	SetRace(race);
 
 	Vertex vs[]{
 		{ { -size.x / 2, -size.y / 2, 0.0f },{ 0.0f, 0.0f } },
@@ -28,6 +26,23 @@ Sprite::~Sprite()
 	if (vb)vb->Release();
 }
 
-void SpriteSystem::Render()
+void Sprite::Draw(LPDIRECT3DDEVICE9 device)
 {
+	device->SetFVF(D3DFVF_XYZ | D3DFVF_TEX1);
+	device->SetTexture(0, texture);
+	device->SetTransform(D3DTS_WORLD, &transform->GetMatrix());
+	device->SetStreamSource(0, vb, 0, sizeof(Vertex));
+	device->DrawPrimitive(D3DPT_TRIANGLEFAN, 0, 2);
+}
+
+void SpriteSystem::Render(LPDIRECT3DDEVICE9 device)
+{
+	Sprite** sprites;
+	GetComponents(&sprites);
+	for (size_t i = 0; i < ECS::MAX_COMPONENTS; ++i) {
+		auto sprite = sprites[i];
+		if (sprite) {
+			sprite->Draw(device);
+		}
+	}
 }

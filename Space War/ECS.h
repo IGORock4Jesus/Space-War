@@ -1,10 +1,11 @@
 #pragma once
 #include <typeinfo>
 #include <string>
+#include <d3dx9.h>
 
 namespace ECS
 {
-	constexpr size_t MAX_COMPONENTS = 1000;
+	constexpr size_t MAX_COMPONENTS = 100;
 	constexpr size_t MAX_ENTITY_COMPONENTS = 8;
 
 	class Component {
@@ -40,7 +41,8 @@ namespace ECS
 			for (size_t i = 0; i < MAX_ENTITY_COMPONENTS; i++)
 			{
 				if (!components[i]) {
-					components = c;
+					components[i] = c;
+					return;
 				}
 			}
 
@@ -74,10 +76,26 @@ namespace ECS
 
 		T* components[MAX_COMPONENTS]{ 0 };
 
+	protected:
+		void GetComponents(__out T*** components) {
+			*components = this->components;
+		}
+
 	public:
 		virtual void Update(int elapsedTime) {}
-		virtual void Render() {}
+		virtual void Render(LPDIRECT3DDEVICE9 device) {}
 
+		void Add(T* component) {
+			for (size_t i = 0; i < MAX_COMPONENTS; i++)
+			{
+				if (!components[i]) {
+					components[i] = component;
+					return;
+				}
+			}
+
+			throw std::overflow_error("Система не может хранить больше компонентов.");
+		}
 	};
 
 	template <typename T>
