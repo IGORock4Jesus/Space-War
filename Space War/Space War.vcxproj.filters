@@ -4,11 +4,16 @@
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="Core.cpp" />
     <ClCompile Include="Planet.cpp" />
+    <ClCompile Include="ECS.cpp" />
+    <ClCompile Include="Sprite.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core.h" />
     <ClInclude Include="Planet.h" />
     <ClInclude Include="Vertex.h" />
     <ClInclude Include="Race.h" />
+    <ClInclude Include="ECS.h" />
+    <ClInclude Include="Sprite.h" />
+    <ClInclude Include="Transform.h" />
   </ItemGroup>
 </Project>

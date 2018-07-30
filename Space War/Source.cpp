@@ -41,10 +41,10 @@ void OnRendering(LPDIRECT3DDEVICE9 device) {
 }
 
 bool LoadImages() {
-	if (!Core::LoadTexture("red planet", R"(C:\Users\igoro\source\repos\Space War\textures\planet_a.png)"))
+	if (!Core::LoadTexture("red planet", R"(..\textures\planet_a.png)"))
 		return false;
 
-	if (!Core::LoadTexture("blue planet", R"(C:\Users\igoro\source\repos\Space War\textures\planet_b.png)"))
+	if (!Core::LoadTexture("blue planet", R"(..\textures\planet_b.png)"))
 		return false;
 
 	return true;
