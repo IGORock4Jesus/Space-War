@@ -5,7 +5,7 @@
 
 namespace ECS
 {
-	constexpr size_t MAX_COMPONENTS = 100;
+	constexpr size_t MAX_COMPONENTS = 100000;
 	constexpr size_t MAX_ENTITY_COMPONENTS = 8;
 
 	template <typename T>
@@ -122,6 +122,19 @@ namespace ECS
 				}
 			}
 
+			throw std::overflow_error("Система не может хранить больше компонентов.");
+		}
+
+		template <typename ...Params>
+		T* Create(Params ...params) {
+			for (size_t i = 0; i < MAX_COMPONENTS; i++)
+			{
+				if (!components[i]) {
+					auto c = new T(params...);
+					components[i] = c;
+					return c;
+				}
+			}
 			throw std::overflow_error("Система не может хранить больше компонентов.");
 		}
 	};

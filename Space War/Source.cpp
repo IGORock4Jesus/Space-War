@@ -5,7 +5,7 @@
 #include "Planet.h"
 #include "Sprite.h"
 #include "PlanetRotation.h"	
-
+#include "Scene.h"
 
 constexpr float SHIP_SIZE = 5.0f;
 float r1, r2;
@@ -15,8 +15,7 @@ TransformSystem transformSystem;
 SpriteSystem spriteSystem;
 PlanetRotationSystem planetRotationSystem;
 std::vector<ECS::SystemBase*> systems;
-
-ECS::Entity* entity;
+Scene scene;
 
 
 void OnKeyDown(int key) {
@@ -80,6 +79,32 @@ void ClearPlanets() {
 	}
 	planets.clear();
 }
+
+ECS::Entity* CreatePlanet(D3DXVECTOR2 position, float rotateSpeed) {
+	Transform* t = transformSystem.Create();
+	t->SetPosition(position);
+
+	Sprite* s = spriteSystem.Create(t, Core::GetDevice(), D3DXVECTOR2{ 100, 100 });
+	s->SetTexture(Core::FindTexture("red planet"));
+
+	PlanetRotation* rotation = planetRotationSystem.Create(t);
+	rotation->SetSpeed(rotateSpeed);
+
+	auto entity = new ECS::Entity();
+	entity->AddComponent(t);
+	entity->AddComponent(s);
+	entity->AddComponent(rotation);
+
+	return entity;
+}
+
+float frand(float min, float max) {
+	float f = rand() / (float)RAND_MAX;
+	auto range = max - min;
+	f *= range;
+	return f + min;
+}
+
 void LoadGame() {
 	systems = {
 		&transformSystem,
@@ -94,22 +119,10 @@ void LoadGame() {
 	planets.push_back(p);
 	planets.push_back(new Planet(Core::GetDevice(), { 70, 70 }, Race::Blue));
 
-	Transform* t = new Transform();
-	t->SetPosition({ 20,20 });
-	transformSystem.Add(t);
-
-	Sprite* s = new Sprite(t, Core::GetDevice(), { 100, 100 });
-	s->SetTexture(Core::FindTexture("red planet"));
-	spriteSystem.Add(s);
-
-	PlanetRotation* rotation = new PlanetRotation(t);
-	rotation->SetSpeed(-100.0f);
-	planetRotationSystem.Add(rotation);
-
-	entity = new ECS::Entity();
-	entity->AddComponent(t);
-	entity->AddComponent(s);
-	entity->AddComponent(rotation);
+	for (size_t x = 0; x < 10000; x++)
+	{
+			scene.AddEntity(CreatePlanet({ frand(-400,400), frand(-300,300) }, frand(-200, 200)));
+		}
 
 }
 

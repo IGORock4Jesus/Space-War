@@ -7,6 +7,7 @@
     <ClCompile Include="ECS.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="PlanetRotation.cpp" />
+    <ClCompile Include="Scene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core.h" />
@@ -17,5 +18,6 @@
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="PlanetRotation.h" />
+    <ClInclude Include="Scene.h" />
   </ItemGroup>
 </Project>
