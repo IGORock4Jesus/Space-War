@@ -8,6 +8,7 @@
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="PlanetRotation.cpp" />
     <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="GalaxyManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core.h" />
@@ -19,5 +20,6 @@
     <ClInclude Include="Transform.h" />
     <ClInclude Include="PlanetRotation.h" />
     <ClInclude Include="Scene.h" />
+    <ClInclude Include="GalaxyManager.h" />
   </ItemGroup>
 </Project>

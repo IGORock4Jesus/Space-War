@@ -155,6 +155,7 @@
   <ItemGroup>
     <ClCompile Include="Core.cpp" />
     <ClCompile Include="ECS.cpp" />
+    <ClCompile Include="GalaxyManager.cpp" />
     <ClCompile Include="Planet.cpp" />
     <ClCompile Include="PlanetRotation.cpp" />
     <ClCompile Include="Scene.cpp" />
@@ -164,6 +165,7 @@
   <ItemGroup>
     <ClInclude Include="Core.h" />
     <ClInclude Include="ECS.h" />
+    <ClInclude Include="GalaxyManager.h" />
     <ClInclude Include="Planet.h" />
     <ClInclude Include="PlanetRotation.h" />
     <ClInclude Include="Race.h" />

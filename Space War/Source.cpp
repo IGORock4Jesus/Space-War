@@ -114,15 +114,6 @@ void LoadGame() {
 
 
 	ClearPlanets();
-	auto p = new Planet(Core::GetDevice(), { 100, 100 }, Race::Red);
-	p->SetPosition({ -200, 0 });
-	planets.push_back(p);
-	planets.push_back(new Planet(Core::GetDevice(), { 70, 70 }, Race::Blue));
-
-	for (size_t x = 0; x < 10000; x++)
-	{
-			scene.AddEntity(CreatePlanet({ frand(-400,400), frand(-300,300) }, frand(-200, 200)));
-		}
 
 }
 
