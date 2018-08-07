@@ -6,6 +6,8 @@
 #include "Sprite.h"
 #include "PlanetRotation.h"	
 #include "Scene.h"
+#include "GalaxyManager.h"
+
 
 constexpr float SHIP_SIZE = 5.0f;
 float r1, r2;
@@ -16,6 +18,7 @@ SpriteSystem spriteSystem;
 PlanetRotationSystem planetRotationSystem;
 std::vector<ECS::SystemBase*> systems;
 Scene scene;
+GalaxyManager galaxyManager;
 
 
 void OnKeyDown(int key) {
@@ -114,6 +117,8 @@ void LoadGame() {
 
 
 	ClearPlanets();
+
+	galaxyManager.Load();
 
 }
 

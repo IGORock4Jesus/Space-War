@@ -9,6 +9,7 @@
     <ClCompile Include="PlanetRotation.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="GalaxyManager.cpp" />
+    <ClCompile Include="Label.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core.h" />
@@ -21,5 +22,9 @@
     <ClInclude Include="PlanetRotation.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="GalaxyManager.h" />
+    <ClInclude Include="Label.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="galaxies.txt" />
   </ItemGroup>
 </Project>
