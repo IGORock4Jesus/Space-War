@@ -1,0 +1,20 @@
+2
+	Sagittarius
+	3
+		Noema
+		100	100
+		0
+
+		Nahood
+		400 200
+		1
+
+		Accure
+		600 600
+		2
+
+	Aquarius
+	1
+		Rahaele
+		100 500
+		3

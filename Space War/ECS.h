@@ -8,6 +8,8 @@ namespace ECS
 	constexpr size_t MAX_COMPONENTS = 100000;
 	constexpr size_t MAX_ENTITY_COMPONENTS = 8;
 
+	class Entity;
+
 	template <typename T>
 	size_t GetComponentHash() {
 		static const size_t hash = typeid(T).hash_code();
@@ -21,6 +23,8 @@ namespace ECS
 			: hashType{ hashType } {}
 
 		virtual ~ComponentBase() {}
+
+		virtual void OnInitialize(Entity* entity) {}
 	};
 
 	template <typename T>
@@ -132,6 +136,19 @@ namespace ECS
 				if (!components[i]) {
 					auto c = new T(params...);
 					components[i] = c;
+					return c;
+				}
+			}
+			throw std::overflow_error("Система не может хранить больше компонентов.");
+		}
+
+		T* Create(Entity* entity) {
+			for (size_t i = 0; i < MAX_COMPONENTS; i++)
+			{
+				if (!components[i]) {
+					auto c = new T();
+					components[i] = c;
+					c->OnInitialize(entity);
 					return c;
 				}
 			}

@@ -156,6 +156,7 @@
     <ClCompile Include="Core.cpp" />
     <ClCompile Include="ECS.cpp" />
     <ClCompile Include="GalaxyManager.cpp" />
+    <ClCompile Include="Label.cpp" />
     <ClCompile Include="Planet.cpp" />
     <ClCompile Include="PlanetRotation.cpp" />
     <ClCompile Include="Scene.cpp" />
@@ -166,6 +167,7 @@
     <ClInclude Include="Core.h" />
     <ClInclude Include="ECS.h" />
     <ClInclude Include="GalaxyManager.h" />
+    <ClInclude Include="Label.h" />
     <ClInclude Include="Planet.h" />
     <ClInclude Include="PlanetRotation.h" />
     <ClInclude Include="Race.h" />
@@ -173,6 +175,9 @@
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="Vertex.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="galaxies.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

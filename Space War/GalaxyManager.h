@@ -21,6 +21,7 @@ class GalaxyManager
 		int countOfGalaxies;
 		struct Galaxy
 		{
+			char name[32];
 			int countOfPlanets;
 			struct Planet
 			{
@@ -44,6 +45,11 @@ class GalaxyManager
 	};
 
 	File* file = nullptr;
+#ifdef _DEBUG
+	const char* filename = "galaxies.txt";
+#else
+	const char* filename = "..\\game\\galaxies.txt";
+#endif // _DEBUG
 
 public:
 	GalaxyManager();
