@@ -1,5 +1,7 @@
 #include "Core.h"
 #include <map>
+#include <fstream>
+
 
 namespace Core {
 
@@ -202,5 +204,25 @@ namespace Core {
 		};
 		device3d->SetFVF(D3DFVF_XYZRHW | D3DFVF_DIFFUSE);
 		device3d->DrawPrimitiveUP(D3DPT_LINELIST, 1, vs, sizeof(Vertex));
+	}
+
+	std::vector<char> LoadFile(std::string filename, std::string* error)
+	{
+		std::ifstream file{ filename };
+		if (file.bad()) {
+			if (error)
+				*error = "Файл не найден или поврежден.";
+			return std::vector<char>();
+		}
+
+		file.seekg(0, std::ios::end);
+		size_t size = file.tellg();
+		file.seekg(0, std::ios::beg);
+
+		std::vector<char> output(size);
+
+		file.read(output.data(), size);
+
+		return move(output);
 	}
 }

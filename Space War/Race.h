@@ -1,5 +1,5 @@
 #pragma once
 
 enum class Race {
-	Red, Green, Blue,
+	None, Red, Green, Blue,
 };

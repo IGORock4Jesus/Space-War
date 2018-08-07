@@ -4,11 +4,22 @@
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="Core.cpp" />
     <ClCompile Include="Planet.cpp" />
+    <ClCompile Include="ECS.cpp" />
+    <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="PlanetRotation.cpp" />
+    <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="GalaxyManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core.h" />
     <ClInclude Include="Planet.h" />
     <ClInclude Include="Vertex.h" />
     <ClInclude Include="Race.h" />
+    <ClInclude Include="ECS.h" />
+    <ClInclude Include="Sprite.h" />
+    <ClInclude Include="Transform.h" />
+    <ClInclude Include="PlanetRotation.h" />
+    <ClInclude Include="Scene.h" />
+    <ClInclude Include="GalaxyManager.h" />
   </ItemGroup>
 </Project>

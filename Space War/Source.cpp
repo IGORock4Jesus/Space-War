@@ -3,11 +3,20 @@
 #include "Core.h"
 #include "Race.h"
 #include "Planet.h"
-
+#include "Sprite.h"
+#include "PlanetRotation.h"	
+#include "Scene.h"
 
 constexpr float SHIP_SIZE = 5.0f;
 float r1, r2;
 std::vector<Planet*> planets;
+
+TransformSystem transformSystem;
+SpriteSystem spriteSystem;
+PlanetRotationSystem planetRotationSystem;
+std::vector<ECS::SystemBase*> systems;
+Scene scene;
+
 
 void OnKeyDown(int key) {
 	if (key == VK_ESCAPE)
@@ -38,25 +47,30 @@ void OnRendering(LPDIRECT3DDEVICE9 device) {
 	for (auto p : planets) {
 		p->Draw(device);
 	}
+
+	spriteSystem.Render(device);
 }
 
 bool LoadImages() {
-	if (!Core::LoadTexture("red planet", R"(C:\Users\igoro\source\repos\Space War\textures\planet_a.png)"))
+	if (!Core::LoadTexture("red planet", R"(..\textures\planet_a.png)"))
 		return false;
 
-	if (!Core::LoadTexture("blue planet", R"(C:\Users\igoro\source\repos\Space War\textures\planet_b.png)"))
+	if (!Core::LoadTexture("blue planet", R"(..\textures\planet_b.png)"))
 		return false;
 
 	return true;
 }
 
 void OnUpdate(float elapsedTime) {
-	r1 += 17.f * elapsedTime*100;
-	r2 += 3.f * elapsedTime*100;
+	r1 += 17.f * elapsedTime * 100;
+	r2 += 3.f * elapsedTime * 100;
 
 	for (auto p : planets) {
 		p->Update(elapsedTime);
 	}
+
+	for (auto s : systems)
+		s->Update(elapsedTime);
 }
 
 void ClearPlanets() {
@@ -65,12 +79,42 @@ void ClearPlanets() {
 	}
 	planets.clear();
 }
+
+ECS::Entity* CreatePlanet(D3DXVECTOR2 position, float rotateSpeed) {
+	Transform* t = transformSystem.Create();
+	t->SetPosition(position);
+
+	Sprite* s = spriteSystem.Create(t, Core::GetDevice(), D3DXVECTOR2{ 100, 100 });
+	s->SetTexture(Core::FindTexture("red planet"));
+
+	PlanetRotation* rotation = planetRotationSystem.Create(t);
+	rotation->SetSpeed(rotateSpeed);
+
+	auto entity = new ECS::Entity();
+	entity->AddComponent(t);
+	entity->AddComponent(s);
+	entity->AddComponent(rotation);
+
+	return entity;
+}
+
+float frand(float min, float max) {
+	float f = rand() / (float)RAND_MAX;
+	auto range = max - min;
+	f *= range;
+	return f + min;
+}
+
 void LoadGame() {
+	systems = {
+		&transformSystem,
+		&spriteSystem,
+		&planetRotationSystem
+	};
+
+
 	ClearPlanets();
-	auto p = new Planet(Core::GetDevice(), { 100,100 }, Race::Red);
-	p->SetPosition({ -200, 0 });
-	planets.push_back(p);
-	planets.push_back(new Planet(Core::GetDevice(), { 70,70 }, Race::Blue));
+
 }
 
 int WINAPI WinMain(HINSTANCE hinstance, HINSTANCE, LPSTR, int) {

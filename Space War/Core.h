@@ -1,6 +1,7 @@
 #pragma once
 #include <d3dx9.h>
 #include <string>
+#include <vector>
 
 namespace Core {
 	struct Desc
@@ -23,4 +24,7 @@ namespace Core {
 	bool LoadTexture(std::string name, std::string path);
 	void DrawImage(float x, float y, float w, float h, std::string name, float angle = 0.0f);
 	void DrawLine(float x1, float y1, float x2, float y2, D3DCOLOR color);
+
+	std::vector<char> LoadFile(std::string filename, std::string* error = nullptr);
+
 }
