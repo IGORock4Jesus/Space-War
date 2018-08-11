@@ -10,6 +10,9 @@
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="GalaxyManager.cpp" />
     <ClCompile Include="Label.cpp" />
+    <ClCompile Include="GameStack.cpp" />
+    <ClCompile Include="LogoGameStackItem.cpp" />
+    <ClCompile Include="PlayGameStackItem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core.h" />
@@ -23,6 +26,10 @@
     <ClInclude Include="Scene.h" />
     <ClInclude Include="GalaxyManager.h" />
     <ClInclude Include="Label.h" />
+    <ClInclude Include="GameStack.h" />
+    <ClInclude Include="LogoGameStackItem.h" />
+    <ClInclude Include="PlayGameStackItem.h" />
+    <ClInclude Include="PLanetDesc.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="galaxies.txt" />

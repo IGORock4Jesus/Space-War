@@ -32,6 +32,7 @@ public:
 	}
 
 	const float GetAngle()const { return angle; }
+	const D3DXVECTOR2 GetPosition() const { return position; }
 
 	const D3DXMATRIX GetMatrix() const { return transform; }
 };

@@ -225,4 +225,8 @@ namespace Core {
 
 		return move(output);
 	}
+
+	void Log(std::string text) {
+		OutputDebugString((text + "\n").c_str());
+	}
 }

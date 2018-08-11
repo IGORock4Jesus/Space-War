@@ -27,4 +27,5 @@ namespace Core {
 
 	std::vector<char> LoadFile(std::string filename, std::string* error = nullptr);
 
+	void Log(std::string text);
 }

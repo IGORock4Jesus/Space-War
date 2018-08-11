@@ -17,8 +17,8 @@ namespace ECS
 	}
 
 	class ComponentBase {
-		const size_t hashType;
 	public:
+		const size_t hashType;
 		ComponentBase(size_t hashType)
 			: hashType{ hashType } {}
 
@@ -130,30 +130,20 @@ namespace ECS
 		}
 
 		template <typename ...Params>
-		T* Create(Params ...params) {
+		T* Create(Entity* entity, Params ...params) {
 			for (size_t i = 0; i < MAX_COMPONENTS; i++)
 			{
 				if (!components[i]) {
 					auto c = new T(params...);
 					components[i] = c;
+					c->OnInitialize(entity);
+					entity->AddComponent(c);
 					return c;
 				}
 			}
 			throw std::overflow_error("Система не может хранить больше компонентов.");
 		}
 
-		T* Create(Entity* entity) {
-			for (size_t i = 0; i < MAX_COMPONENTS; i++)
-			{
-				if (!components[i]) {
-					auto c = new T();
-					components[i] = c;
-					c->OnInitialize(entity);
-					return c;
-				}
-			}
-			throw std::overflow_error("Система не может хранить больше компонентов.");
-		}
 	};
 
 }

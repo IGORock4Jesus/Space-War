@@ -156,9 +156,12 @@
     <ClCompile Include="Core.cpp" />
     <ClCompile Include="ECS.cpp" />
     <ClCompile Include="GalaxyManager.cpp" />
+    <ClCompile Include="GameStack.cpp" />
     <ClCompile Include="Label.cpp" />
+    <ClCompile Include="LogoGameStackItem.cpp" />
     <ClCompile Include="Planet.cpp" />
     <ClCompile Include="PlanetRotation.cpp" />
+    <ClCompile Include="PlayGameStackItem.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="Sprite.cpp" />
@@ -167,9 +170,13 @@
     <ClInclude Include="Core.h" />
     <ClInclude Include="ECS.h" />
     <ClInclude Include="GalaxyManager.h" />
+    <ClInclude Include="GameStack.h" />
     <ClInclude Include="Label.h" />
+    <ClInclude Include="LogoGameStackItem.h" />
     <ClInclude Include="Planet.h" />
+    <ClInclude Include="PLanetDesc.h" />
     <ClInclude Include="PlanetRotation.h" />
+    <ClInclude Include="PlayGameStackItem.h" />
     <ClInclude Include="Race.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Sprite.h" />

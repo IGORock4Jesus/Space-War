@@ -7,6 +7,10 @@
 #include "PlanetRotation.h"	
 #include "Scene.h"
 #include "GalaxyManager.h"
+#include "Label.h"
+#include "LogoGameStackItem.h"
+
+
 
 
 constexpr float SHIP_SIZE = 5.0f;
@@ -16,9 +20,12 @@ std::vector<Planet*> planets;
 TransformSystem transformSystem;
 SpriteSystem spriteSystem;
 PlanetRotationSystem planetRotationSystem;
+LabelSystem labelSystem;
+
 std::vector<ECS::SystemBase*> systems;
 Scene scene;
 GalaxyManager galaxyManager;
+GameStack gameStack;
 
 
 void OnKeyDown(int key) {
@@ -51,7 +58,8 @@ void OnRendering(LPDIRECT3DDEVICE9 device) {
 		p->Draw(device);
 	}
 
-	spriteSystem.Render(device);
+	for (auto s : systems)
+		s->Render(device);
 }
 
 bool LoadImages() {
@@ -84,19 +92,15 @@ void ClearPlanets() {
 }
 
 ECS::Entity* CreatePlanet(D3DXVECTOR2 position, float rotateSpeed) {
-	Transform* t = transformSystem.Create();
+	auto entity = new ECS::Entity();
+	Transform* t = transformSystem.Create(entity);
 	t->SetPosition(position);
 
-	Sprite* s = spriteSystem.Create(t, Core::GetDevice(), D3DXVECTOR2{ 100, 100 });
+	Sprite* s = spriteSystem.Create(entity, t, Core::GetDevice(), D3DXVECTOR2{ 100, 100 });
 	s->SetTexture(Core::FindTexture("red planet"));
 
-	PlanetRotation* rotation = planetRotationSystem.Create(t);
+	PlanetRotation* rotation = planetRotationSystem.Create(entity, t);
 	rotation->SetSpeed(rotateSpeed);
-
-	auto entity = new ECS::Entity();
-	entity->AddComponent(t);
-	entity->AddComponent(s);
-	entity->AddComponent(rotation);
 
 	return entity;
 }
@@ -108,18 +112,37 @@ float frand(float min, float max) {
 	return f + min;
 }
 
+ECS::Entity* CreateGalaxyDesc(std::string text) {
+	static float y = 0;
+	y += 100;
+
+	ECS::Entity* entity = new ECS::Entity;
+	Transform* t = transformSystem.Create(entity);
+	t->SetPosition({ 100, y });
+	Label* label = labelSystem.Create(entity, Core::GetDevice());
+	label->SetText(text);
+	label->SetSize({200,50 });
+	return entity;
+}
+
 void LoadGame() {
 	systems = {
 		&transformSystem,
 		&spriteSystem,
-		&planetRotationSystem
+		&planetRotationSystem,
+		&labelSystem
 	};
 
+	gameStack.Push(new LogoGameStackItem());
 
-	ClearPlanets();
+	/*ClearPlanets();
 
 	galaxyManager.Load();
 
+	for (int i = 0; i < galaxyManager.GetGalaxyCount(); i++)
+	{
+		scene.AddEntity(CreateGalaxyDesc(galaxyManager.GetGalaxyName(i)));
+	}*/
 }
 
 int WINAPI WinMain(HINSTANCE hinstance, HINSTANCE, LPSTR, int) {

@@ -1,5 +1,6 @@
 #pragma once
 #include <d3dx9.h>
+#include <string>
 #include "Race.h"
 
 // нужно разработать систему загрузки галактики из файла
@@ -56,7 +57,7 @@ public:
 	~GalaxyManager();
 
 	bool Load();
-
-
+	int GetGalaxyCount() { if (file) return file->countOfGalaxies; return 0; }
+	std::string GetGalaxyName(int index) { if (!file) return ""; return file->galaxies[index].name; }
 };
 
