@@ -1,10 +1,13 @@
 #pragma once
 
 #include "GameStack.h"
+#include "GalaxyManager.h"
 
 
 class LogoGameStackItem : public IGameStackItem
 {
+	GalaxyManager galaxyManager;
+
 public:
 	LogoGameStackItem();
 	~LogoGameStackItem();

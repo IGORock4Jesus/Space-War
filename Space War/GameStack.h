@@ -3,9 +3,20 @@
 #include <stack>
 #include <d3d9.h>
 
+class Scene;
+class GameStack;
 
 class IGameStackItem
 {
+	friend GameStack;
+	Scene* scene;
+	GameStack* gameStack;
+
+protected:
+	Scene * GetScene() { return scene; }
+	GameStack* GetGameStack() { return gameStack; }
+
+
 public:
 	virtual void Initialize() {}
 	virtual void Release() {}
@@ -20,8 +31,10 @@ class GameStack
 {
 	std::stack<IGameStackItem*> stack;
 
+	Scene* scene;
+
 public:
-	GameStack();
+	GameStack(Scene* scene);
 	~GameStack();
 
 	void Push(IGameStackItem* item);
@@ -29,5 +42,14 @@ public:
 
 	void Render(LPDIRECT3DDEVICE9 device);
 	void Update(float time);
+
+	template <typename T, typename... Args>
+	T* Create(Args... args) {
+		static_assert(std::is_base_of_v<IGameStackItem, T>, "T должен наследовать IGameStackItem.");
+		T* t = new T(args...);
+		i->scene = scene;
+		i->gameStack = this;
+		return t;
+	}
 };
 

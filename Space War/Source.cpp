@@ -25,7 +25,7 @@ LabelSystem labelSystem;
 std::vector<ECS::SystemBase*> systems;
 Scene scene;
 GalaxyManager galaxyManager;
-GameStack gameStack;
+GameStack *gameStack;
 
 
 void OnKeyDown(int key) {
@@ -133,7 +133,8 @@ void LoadGame() {
 		&labelSystem
 	};
 
-	gameStack.Push(new LogoGameStackItem());
+	gameStack = new GameStack(&scene);
+	gameStack->Push(gameStack->Create<LogoGameStackItem>());
 
 	/*ClearPlanets();
 
@@ -143,6 +144,11 @@ void LoadGame() {
 	{
 		scene.AddEntity(CreateGalaxyDesc(galaxyManager.GetGalaxyName(i)));
 	}*/
+}
+
+void ReleaseGame() {
+	if (gameStack)
+		delete gameStack;
 }
 
 int WINAPI WinMain(HINSTANCE hinstance, HINSTANCE, LPSTR, int) {
@@ -157,6 +163,7 @@ int WINAPI WinMain(HINSTANCE hinstance, HINSTANCE, LPSTR, int) {
 		if (LoadImages()) {
 			LoadGame();
 			Core::Run();
+			ReleaseGame();
 		}
 	}
 	Core::Release();

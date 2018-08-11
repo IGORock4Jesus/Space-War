@@ -2,7 +2,8 @@
 
 
 
-GameStack::GameStack()
+GameStack::GameStack(Scene* scene)
+	: scene{ scene }
 {
 }
 
