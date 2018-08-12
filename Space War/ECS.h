@@ -81,6 +81,10 @@ namespace ECS
 
 	class SystemBase {
 	public:
+		const size_t hashType;
+		SystemBase(size_t hashType)
+			: hashType{ hashType } {}
+
 		virtual void Update(float elapsedTime) = 0;
 		virtual void Render(LPDIRECT3DDEVICE9 device) = 0;
 	};
@@ -100,6 +104,9 @@ namespace ECS
 		virtual void OnComponentRender(T* component, LPDIRECT3DDEVICE9 device) {}
 
 	public:
+		System()
+			: SystemBase(GetComponentHash<T>())
+		{}
 		virtual void Update(float elapsedTime) final {
 			for (size_t i = 0; i < MAX_COMPONENTS; i++)
 			{

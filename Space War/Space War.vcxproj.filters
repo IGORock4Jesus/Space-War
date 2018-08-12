@@ -13,6 +13,7 @@
     <ClCompile Include="GameStack.cpp" />
     <ClCompile Include="LogoGameStackItem.cpp" />
     <ClCompile Include="PlayGameStackItem.cpp" />
+    <ClCompile Include="SystemManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core.h" />
@@ -30,6 +31,7 @@
     <ClInclude Include="LogoGameStackItem.h" />
     <ClInclude Include="PlayGameStackItem.h" />
     <ClInclude Include="PLanetDesc.h" />
+    <ClInclude Include="SystemManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="galaxies.txt" />

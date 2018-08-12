@@ -8,6 +8,7 @@ class LogoGameStackItem : public IGameStackItem
 {
 	GalaxyManager galaxyManager;
 
+	void CreateGalaxyButton();
 public:
 	LogoGameStackItem();
 	~LogoGameStackItem();
