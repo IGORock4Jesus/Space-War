@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ECS.h"
-
+#include <d3d9.h>
 
 class SystemManager
 {
@@ -17,8 +17,13 @@ public:
 		static_assert(std::is_base_of_v<ECS::SystemBase, T>, "T должен наследовать ECS::SystemBase.");
 		for (size_t i = 0; i < count; i++)
 		{
-			if(ECS::GetComponentHash<)
+			if (ECS::GetComponentHash<T>() == systems[i]->hashType)
+				return (T*)systems[i];
 		}
+		throw std::exception("”казанна€ система компонентов - не существует.");
 	}
+
+	void Render(LPDIRECT3DDEVICE9 device);
+	void Update(float time);
 };
 

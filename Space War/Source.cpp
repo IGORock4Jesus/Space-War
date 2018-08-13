@@ -1,5 +1,6 @@
 #include <d3dx9.h>
 #include <vector>
+#include <Windows.h>
 #include "Core.h"
 #include "Race.h"
 #include "Planet.h"
@@ -9,23 +10,15 @@
 #include "GalaxyManager.h"
 #include "Label.h"
 #include "LogoGameStackItem.h"
-
+#include "SystemManager.h"
 
 
 
 constexpr float SHIP_SIZE = 5.0f;
-float r1, r2;
-std::vector<Planet*> planets;
 
-TransformSystem transformSystem;
-SpriteSystem spriteSystem;
-PlanetRotationSystem planetRotationSystem;
-LabelSystem labelSystem;
-
-std::vector<ECS::SystemBase*> systems;
 Scene scene;
-GalaxyManager galaxyManager;
 GameStack *gameStack;
+SystemManager *systemManager;
 
 
 void OnKeyDown(int key) {
@@ -47,19 +40,7 @@ void DrawShip(Race race, float x, float y) {
 }
 
 void OnRendering(LPDIRECT3DDEVICE9 device) {
-	/*Core::DrawImage(20, 20, 128, 128, "test", r1);
-	Core::DrawImage(200, 20, 128, 128, "test1", r2);
-
-	DrawShip(Race::Blue, 20, 300);
-	DrawShip(Race::Red, 120, 300);
-	DrawShip(Race::Green, 220, 300);*/
-
-	for (auto p : planets) {
-		p->Draw(device);
-	}
-
-	for (auto s : systems)
-		s->Render(device);
+	systemManager->Render(device);
 }
 
 bool LoadImages() {
@@ -73,33 +54,18 @@ bool LoadImages() {
 }
 
 void OnUpdate(float elapsedTime) {
-	r1 += 17.f * elapsedTime * 100;
-	r2 += 3.f * elapsedTime * 100;
-
-	for (auto p : planets) {
-		p->Update(elapsedTime);
-	}
-
-	for (auto s : systems)
-		s->Update(elapsedTime);
-}
-
-void ClearPlanets() {
-	for (auto p : planets) {
-		delete p;
-	}
-	planets.clear();
+	systemManager->Update(elapsedTime);
 }
 
 ECS::Entity* CreatePlanet(D3DXVECTOR2 position, float rotateSpeed) {
 	auto entity = new ECS::Entity();
-	Transform* t = transformSystem.Create(entity);
+	Transform* t = systemManager->Get<TransformSystem>()->Create(entity);
 	t->SetPosition(position);
 
-	Sprite* s = spriteSystem.Create(entity, t, Core::GetDevice(), D3DXVECTOR2{ 100, 100 });
+	Sprite* s = systemManager->Get<SpriteSystem>()->Create(entity, t, Core::GetDevice(), D3DXVECTOR2{ 100, 100 });
 	s->SetTexture(Core::FindTexture("red planet"));
 
-	PlanetRotation* rotation = planetRotationSystem.Create(entity, t);
+	PlanetRotation* rotation = systemManager->Get<PlanetRotationSystem>()->Create(entity, t);
 	rotation->SetSpeed(rotateSpeed);
 
 	return entity;
@@ -117,24 +83,26 @@ ECS::Entity* CreateGalaxyDesc(std::string text) {
 	y += 100;
 
 	ECS::Entity* entity = new ECS::Entity;
-	Transform* t = transformSystem.Create(entity);
+	Transform* t = systemManager->Get<TransformSystem>()->Create(entity);
 	t->SetPosition({ 100, y });
-	Label* label = labelSystem.Create(entity, Core::GetDevice());
+	Label* label = systemManager->Get<LabelSystem>()->Create(entity, Core::GetDevice());
 	label->SetText(text);
 	label->SetSize({200,50 });
 	return entity;
 }
 
 void LoadGame() {
-	systems = {
-		&transformSystem,
-		&spriteSystem,
-		&planetRotationSystem,
-		&labelSystem
-	};
-
 	gameStack = new GameStack(&scene);
 	gameStack->Push(gameStack->Create<LogoGameStackItem>());
+
+	ECS::SystemBase** systems = new ECS::SystemBase*[4]{
+		new TransformSystem(),
+		new SpriteSystem(),
+		new PlanetRotationSystem(),
+		new LabelSystem()
+	};
+
+	systemManager = new SystemManager(systems, 4);
 
 	/*ClearPlanets();
 
@@ -147,6 +115,8 @@ void LoadGame() {
 }
 
 void ReleaseGame() {
+	if (systemManager)
+		delete systemManager;
 	if (gameStack)
 		delete gameStack;
 }

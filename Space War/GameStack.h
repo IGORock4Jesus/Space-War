@@ -47,8 +47,8 @@ public:
 	T* Create(Args... args) {
 		static_assert(std::is_base_of_v<IGameStackItem, T>, "T должен наследовать IGameStackItem.");
 		T* t = new T(args...);
-		i->scene = scene;
-		i->gameStack = this;
+		t->scene = scene;
+		t->gameStack = this;
 		return t;
 	}
 };

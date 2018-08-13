@@ -105,7 +105,7 @@ namespace ECS
 
 	public:
 		System()
-			: SystemBase(GetComponentHash<T>())
+			: SystemBase(GetComponentHash<System<T>>())
 		{}
 		virtual void Update(float elapsedTime) final {
 			for (size_t i = 0; i < MAX_COMPONENTS; i++)
