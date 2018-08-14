@@ -32,6 +32,7 @@
     <ClInclude Include="PlayGameStackItem.h" />
     <ClInclude Include="PLanetDesc.h" />
     <ClInclude Include="SystemManager.h" />
+    <ClInclude Include="json.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="galaxies.txt" />

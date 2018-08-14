@@ -5,16 +5,20 @@
 
 class Scene;
 class GameStack;
+class SystemManager;
+
 
 class IGameStackItem
 {
 	friend GameStack;
 	Scene* scene;
 	GameStack* gameStack;
+	SystemManager* systemManager;
 
 protected:
 	Scene * GetScene() { return scene; }
 	GameStack* GetGameStack() { return gameStack; }
+	SystemManager* GetSystemManager() { return systemManager; }
 
 
 public:
@@ -32,9 +36,11 @@ class GameStack
 	std::stack<IGameStackItem*> stack;
 
 	Scene* scene;
+	SystemManager* systemManager;
+
 
 public:
-	GameStack(Scene* scene);
+	GameStack(Scene* scene, SystemManager* systemManager);
 	~GameStack();
 
 	void Push(IGameStackItem* item);
@@ -49,6 +55,7 @@ public:
 		T* t = new T(args...);
 		t->scene = scene;
 		t->gameStack = this;
+		t->systemManager = systemManager;
 		return t;
 	}
 };

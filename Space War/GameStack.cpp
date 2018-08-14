@@ -2,8 +2,8 @@
 
 
 
-GameStack::GameStack(Scene* scene)
-	: scene{ scene }
+GameStack::GameStack(Scene* scene, SystemManager* systemManager)
+	: scene{ scene }, systemManager{ systemManager }
 {
 }
 

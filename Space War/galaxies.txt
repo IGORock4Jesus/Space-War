@@ -1,20 +1,28 @@
-2
-	Sagittarius
-	3
-		Noema
-		100	100
-		0
-
-		Nahood
-		400 200
-		1
-
-		Accure
-		600 600
-		2
-
-	Aquarius
-	1
-		Rahaele
-		100 500
-		3
+{
+	"version": "1.0",
+	"galaxies": [{
+		"name": "Sagittarius",
+		"texture_path": "C:\\Users\\IGORo\\Pictures\\Positive.png",
+		"planets": [{
+			"name": "Noema",
+			"position": [100, 100],
+			"race": 0
+		}, {
+			"name": "Nahood",
+			"position": [400, 200],
+			"race": 1
+		}, {
+			"name": "Accure",
+			"position": [600, 600],
+			"race": 2
+		}]
+	}, {
+		"name": "Aquarius",
+		"texture_path": "C:\\Users\\IGORo\\Pictures\\test.dds",
+		"planets": [{
+			"name": "Rahaele",
+			"position": [100, 500],
+			"race": 3
+		}]
+	}]
+}

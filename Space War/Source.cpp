@@ -92,26 +92,17 @@ ECS::Entity* CreateGalaxyDesc(std::string text) {
 }
 
 void LoadGame() {
-	gameStack = new GameStack(&scene);
-	gameStack->Push(gameStack->Create<LogoGameStackItem>());
-
 	ECS::SystemBase** systems = new ECS::SystemBase*[4]{
 		new TransformSystem(),
 		new SpriteSystem(),
 		new PlanetRotationSystem(),
 		new LabelSystem()
 	};
-
 	systemManager = new SystemManager(systems, 4);
 
-	/*ClearPlanets();
+	gameStack = new GameStack(&scene, systemManager);
+	gameStack->Push(gameStack->Create<LogoGameStackItem>());
 
-	galaxyManager.Load();
-
-	for (int i = 0; i < galaxyManager.GetGalaxyCount(); i++)
-	{
-		scene.AddEntity(CreateGalaxyDesc(galaxyManager.GetGalaxyName(i)));
-	}*/
 }
 
 void ReleaseGame() {
