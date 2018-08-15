@@ -10,11 +10,11 @@
 void LogoGameStackItem::CreateGalaxyButton(float y, std::string name, std::string textureName)
 {
 	auto entity = GetScene()->CreateEntity();
-	auto t = GetSystemManager()->Get<Transform>()->Create(entity);
+	auto t = GetSystemManager()->Get<TransformSystem>()->Create(entity);
 	t->SetPosition({ 0, y });
-	auto sprite = GetSystemManager()->Get<Sprite>()->Create(entity, t, Core::GetDevice(), D3DXVECTOR2{ 100,100 });
+	auto sprite = GetSystemManager()->Get<SpriteSystem>()->Create(entity, t, Core::GetDevice(), D3DXVECTOR2{ 100,100 });
 	sprite->SetTexture(Core::FindTexture(textureName));
-	auto label = GetSystemManager()->Get<Label>()->Create(entity, Core::GetDevice());
+	auto label = GetSystemManager()->Get<LabelSystem>()->Create(entity, Core::GetDevice());
 	label->SetText(name);
 }
 

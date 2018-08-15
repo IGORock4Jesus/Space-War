@@ -18,7 +18,7 @@ public:
 };
 
 
-class PlanetRotationSystem : public ECS::System<PlanetRotation>
+class PlanetRotationSystem : public ECS::System<PlanetRotationSystem, PlanetRotation>
 {
 private:
 	virtual void OnComponentUpdate(PlanetRotation* component, float elapsedTime) override;

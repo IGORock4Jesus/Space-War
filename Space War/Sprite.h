@@ -19,7 +19,7 @@ public:
 	void SetTexture(LPDIRECT3DTEXTURE9 t) { texture = t; }
 };
 
-class SpriteSystem : public ECS::System<Sprite>
+class SpriteSystem : public ECS::System<SpriteSystem, Sprite>
 {
 private:
 	virtual void OnComponentRender(Sprite* component, LPDIRECT3DDEVICE9 device) override;
