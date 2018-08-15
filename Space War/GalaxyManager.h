@@ -4,6 +4,7 @@
 #include <vector>
 #include "Race.h"
 #include "json.h"
+#include "Core.h"
 
 // нужно разработать систему загрузки галактики из файла
 // корневая папка с галактиками (уровнями) - "galaxies"
@@ -52,11 +53,7 @@ class GalaxyManager
 
 	nlohmann::json file;
 
-#ifdef _DEBUG
-	const char* filename = "galaxies.txt";
-#else
 	const char* filename = "..\\game\\galaxies.txt";
-#endif // _DEBUG
 
 	void Parse(std::vector<char>& data);
 
@@ -68,8 +65,8 @@ public:
 	//int GetGalaxyCount() { if (file) return file->countOfGalaxies; return 0; }
 	//std::string GetGalaxyName(int index) { if (!file) return ""; return file->galaxies[index].name; }
 
-	int GetGalaxyCount() { if (!file) return 0; return file.size(); }
-	std::string GetGalaxyName(int index) { if (!file) return ""; return file["galaxies"][index]["name"]; }
-	std::string GetGalaxyTexturePath(int index) { if (!file) return ""; return file["galaxies"][index]["texture_path"]; }
+	int GetGalaxyCount();
+	std::string GetGalaxyName(int index);
+	std::string GetGalaxyTexturePath(int index);
 };
 

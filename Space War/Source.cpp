@@ -59,13 +59,13 @@ void OnUpdate(float elapsedTime) {
 
 ECS::Entity* CreatePlanet(D3DXVECTOR2 position, float rotateSpeed) {
 	auto entity = new ECS::Entity();
-	Transform* t = systemManager->Get<TransformSystem>()->Create(entity);
+	Transform* t = systemManager->Get<Transform>()->Create(entity);
 	t->SetPosition(position);
 
-	Sprite* s = systemManager->Get<SpriteSystem>()->Create(entity, t, Core::GetDevice(), D3DXVECTOR2{ 100, 100 });
+	Sprite* s = systemManager->Get<Sprite>()->Create(entity, t, Core::GetDevice(), D3DXVECTOR2{ 100, 100 });
 	s->SetTexture(Core::FindTexture("red planet"));
 
-	PlanetRotation* rotation = systemManager->Get<PlanetRotationSystem>()->Create(entity, t);
+	PlanetRotation* rotation = systemManager->Get<PlanetRotation>()->Create(entity, t);
 	rotation->SetSpeed(rotateSpeed);
 
 	return entity;
@@ -82,13 +82,13 @@ ECS::Entity* CreateGalaxyDesc(std::string text) {
 	static float y = 0;
 	y += 100;
 
-	ECS::Entity* entity = new ECS::Entity;
-	Transform* t = systemManager->Get<TransformSystem>()->Create(entity);
+	/*ECS::Entity* entity = new ECS::Entity;
+	Transform* t = systemManager->Get<Transform>()->Create(entity);
 	t->SetPosition({ 100, y });
-	Label* label = systemManager->Get<LabelSystem>()->Create(entity, Core::GetDevice());
+	Label* label = systemManager->Get<Label>()->Create(entity, Core::GetDevice());
 	label->SetText(text);
 	label->SetSize({200,50 });
-	return entity;
+	return entity;*/
 }
 
 void LoadGame() {

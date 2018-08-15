@@ -89,23 +89,24 @@ namespace ECS
 		virtual void Render(LPDIRECT3DDEVICE9 device) = 0;
 	};
 
-	template <typename T>
+	template <typename TComponent>
 	class System : public SystemBase {
-		static_assert(std::is_base_of<ComponentBase, T>::value, "T должен наследовать ECS::Component!");
+		static_assert(std::is_base_of<ComponentBase, TComponent>::value, "TComponent должен наследовать ECS::Component!");
+		//static_assert(std::is_base_of<SystemBase, TSystem>::value, "TSystem должен наследовать ECS::System!");
 
-		T* components[MAX_COMPONENTS]{ 0 };
+		TComponent* components[MAX_COMPONENTS]{ 0 };
 
 	protected:
-		void GetComponents(__out T*** components) {
+		void GetComponents(__out TComponent*** components) {
 			*components = this->components;
 		}
 
-		virtual void OnComponentUpdate(T* component, float elapsedTime) {}
-		virtual void OnComponentRender(T* component, LPDIRECT3DDEVICE9 device) {}
+		virtual void OnComponentUpdate(TComponent* component, float elapsedTime) {}
+		virtual void OnComponentRender(TComponent* component, LPDIRECT3DDEVICE9 device) {}
 
 	public:
 		System()
-			: SystemBase(GetComponentHash<System<T>>())
+			: SystemBase(GetComponentHash<System<TComponent>>())
 		{}
 		virtual void Update(float elapsedTime) final {
 			for (size_t i = 0; i < MAX_COMPONENTS; i++)
@@ -124,7 +125,7 @@ namespace ECS
 			}
 		}
 
-		void Add(T* component) {
+		void Add(TComponent* component) {
 			for (size_t i = 0; i < MAX_COMPONENTS; i++)
 			{
 				if (!components[i]) {
@@ -137,11 +138,11 @@ namespace ECS
 		}
 
 		template <typename ...Params>
-		T* Create(Entity* entity, Params ...params) {
+		TComponent* Create(Entity* entity, Params ...params) {
 			for (size_t i = 0; i < MAX_COMPONENTS; i++)
 			{
 				if (!components[i]) {
-					auto c = new T(params...);
+					auto c = new TComponent(params...);
 					components[i] = c;
 					c->OnInitialize(entity);
 					entity->AddComponent(c);

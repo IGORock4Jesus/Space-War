@@ -7,7 +7,7 @@ void GalaxyManager::Parse(std::vector<char>& data)
 {
 	file = nlohmann::json::parse(data.data());
 
-	
+
 }
 
 GalaxyManager::GalaxyManager()
@@ -62,3 +62,21 @@ bool GalaxyManager::Load()
 
 	return true;
 }
+
+
+#pragma region GETs
+
+int GalaxyManager::GetGalaxyCount() {
+	try { return file["galaxies"].size(); }
+	catch (nlohmann::json::type_error ex) { Core::Log(ex.what()); return 0; }
+}
+
+std::string GalaxyManager::GetGalaxyName(int index) {
+	return file["galaxies"][index]["name"];
+}
+
+std::string GalaxyManager::GetGalaxyTexturePath(int index) { 
+	return file["galaxies"][index]["texture_path"]; 
+}
+
+#pragma endregion

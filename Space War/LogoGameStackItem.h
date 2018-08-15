@@ -8,7 +8,7 @@ class LogoGameStackItem : public IGameStackItem
 {
 	GalaxyManager galaxyManager;
 
-	void CreateGalaxyButton(float y, std::string textureName);
+	void CreateGalaxyButton(float y, std::string name, std::string textureName);
 public:
 	LogoGameStackItem();
 	~LogoGameStackItem();

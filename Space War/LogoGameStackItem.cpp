@@ -4,17 +4,18 @@
 #include "SystemManager.h"
 #include "Transform.h"
 #include "Sprite.h"
+#include "Label.h"
 
 
-
-void LogoGameStackItem::CreateGalaxyButton(float y, std::string textureName)
+void LogoGameStackItem::CreateGalaxyButton(float y, std::string name, std::string textureName)
 {
 	auto entity = GetScene()->CreateEntity();
-	auto t = GetSystemManager()->Get<TransformSystem>()->Create(entity);
-	t->SetPosition({ 50, y });
-	auto sprite = GetSystemManager()->Get<SpriteSystem>()->Create(entity, t, Core::GetDevice(), D3DXVECTOR2{ 100,100 });
+	auto t = GetSystemManager()->Get<Transform>()->Create(entity);
+	t->SetPosition({ 0, y });
+	auto sprite = GetSystemManager()->Get<Sprite>()->Create(entity, t, Core::GetDevice(), D3DXVECTOR2{ 100,100 });
 	sprite->SetTexture(Core::FindTexture(textureName));
-	
+	auto label = GetSystemManager()->Get<Label>()->Create(entity, Core::GetDevice());
+	label->SetText(name);
 }
 
 LogoGameStackItem::LogoGameStackItem()
@@ -42,10 +43,11 @@ void LogoGameStackItem::Initialize()
 	for (size_t i = 0; i < galaxyManager.GetGalaxyCount(); i++)
 	{
 		// загружаю текстурку
-		auto name = "galaxyView_" + galaxyManager.GetGalaxyName(i);
-		Core::LoadTexture(name, galaxyManager.GetGalaxyTexturePath(i));
+		auto name = galaxyManager.GetGalaxyName(i);
+		auto textureName = "galaxyView_" + name;
+		Core::LoadTexture(textureName, galaxyManager.GetGalaxyTexturePath(i));
 
-		CreateGalaxyButton(y, name);
+		CreateGalaxyButton(y, name, textureName);
 
 		y += 200;
 	}
