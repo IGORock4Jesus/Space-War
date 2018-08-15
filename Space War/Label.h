@@ -25,7 +25,7 @@ public:
 };
 
 
-class LabelSystem : public ECS::System<Label> {
+class LabelSystem : public ECS::System<LabelSystem, Label> {
 public:
 	virtual void OnComponentRender(Label* label, LPDIRECT3DDEVICE9 device) override;
 };

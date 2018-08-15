@@ -34,7 +34,4 @@
     <ClInclude Include="SystemManager.h" />
     <ClInclude Include="json.h" />
   </ItemGroup>
-  <ItemGroup>
-    <Text Include="galaxies.txt" />
-  </ItemGroup>
 </Project>

@@ -11,7 +11,7 @@ namespace ECS
 	class Entity;
 
 	template <typename T>
-	size_t GetComponentHash() {
+	size_t GetTypeHash() {
 		static const size_t hash = typeid(T).hash_code();
 		return hash;
 	}
@@ -29,9 +29,10 @@ namespace ECS
 
 	template <typename T>
 	class Component : public ComponentBase {
+		//static_assert(std::is_base_of<ComponentBase, T>::value, "TComponent должен наследовать ECS::Component!");
 	public:
 		Component() 
-			: ComponentBase(GetComponentHash<T>())
+			: ComponentBase(GetTypeHash<T>())
 		{}
 	};
 
@@ -89,7 +90,7 @@ namespace ECS
 		virtual void Render(LPDIRECT3DDEVICE9 device) = 0;
 	};
 
-	template <typename TComponent>
+	template <typename TSystem, typename TComponent>
 	class System : public SystemBase {
 		static_assert(std::is_base_of<ComponentBase, TComponent>::value, "TComponent должен наследовать ECS::Component!");
 		//static_assert(std::is_base_of<SystemBase, TSystem>::value, "TSystem должен наследовать ECS::System!");
@@ -106,7 +107,7 @@ namespace ECS
 
 	public:
 		System()
-			: SystemBase(GetComponentHash<System<TComponent>>())
+			: SystemBase(GetTypeHash<TSystem>())
 		{}
 		virtual void Update(float elapsedTime) final {
 			for (size_t i = 0; i < MAX_COMPONENTS; i++)

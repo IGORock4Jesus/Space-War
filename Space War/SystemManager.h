@@ -13,13 +13,13 @@ public:
 	~SystemManager();
 
 	// T - должен быть компонентом.
-	template <typename T>
-	ECS::System<T>* Get() {
-		static_assert(std::is_base_of_v<ECS::ComponentBase, T>, "T должен наследовать ECS::ComponentBase.");
+	template <typename TSystem>
+	TSystem* Get() {
+		static_assert(std::is_base_of_v<ECS::SystemBase, TSystem>, "T должен наследовать ECS::ComponentBase.");
 		for (size_t i = 0; i < count; i++)
 		{
-			if (ECS::GetComponentHash<ECS::System<T>>() == systems[i]->hashType)
-				return (ECS::System<T>*)systems[i];
+			if (ECS::GetTypeHash<TSystem>() == systems[i]->hashType)
+				return (TSystem*)systems[i];
 		}
 		throw std::exception("”казанна€ система компонентов - не существует.");
 	}

@@ -38,7 +38,7 @@ public:
 };
 
 
-class TransformSystem : public ECS::System<Transform> {
+class TransformSystem : public ECS::System<TransformSystem, Transform> {
 
 public:
 
