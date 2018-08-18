@@ -7,11 +7,17 @@ Sprite::Sprite(Transform* transform, LPDIRECT3DDEVICE9 device, D3DXVECTOR2 size)
 {
 	device->CreateVertexBuffer(sizeof(Vertex) * 4, D3DUSAGE_WRITEONLY, D3DFVF_XYZ | D3DFVF_TEX1, D3DPOOL_MANAGED, &vb, nullptr);
 
-	Vertex vs[]{
+	/*Vertex vs[]{
 		{ { -size.x / 2, -size.y / 2, 0.0f },{ 0.0f, 0.0f } },
 		{ { -size.x / 2, size.y / 2, 0.0f },{ 1.0f, 0.0f } },
 		{ { size.x / 2, size.y / 2, 0.0f },{ 1.0f, 1.0f } },
 		{{size.x / 2, -size.y / 2, 0.0f}, {0.0f, 1.0f}},
+	};*/
+	Vertex vs[]{
+		{ { 0, 0, 0.0f },			{ 0.0f, 0.0f } },
+		{ { size.x, 0, 0.0f},		{ 0.0f, 1.0f } },
+		{ { size.x, size.y, 0.0f },	{ 1.0f, 1.0f } },
+		{ { 0, size.y, 0.0f },		{ 1.0f, 0.0f } },
 	};
 	LPVOID data;
 	if (SUCCEEDED(vb->Lock(0, 0, &data, 0))) {

@@ -5,8 +5,8 @@
 void Label::Render(LPDIRECT3DDEVICE9 device)
 {
 	float x = transform->GetPosition().x, y = transform->GetPosition().y;
-	RECT r{ x, y,x+ size.x, y+size.y };
-	font->DrawTextA(nullptr, text.c_str(), text.length(), &r, DT_CENTER | DT_VCENTER, 0xffffff00);
+	RECT r{ x, y, x + size.x, y + size.y };
+	font->DrawTextA(nullptr, text.c_str(), text.length(), &r, DT_CENTER | DT_VCENTER, 0xffff0000);
 }
 
 Label::Label(LPDIRECT3DDEVICE9 device)
