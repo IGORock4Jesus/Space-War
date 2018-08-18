@@ -16,6 +16,7 @@ void LogoGameStackItem::CreateGalaxyButton(float y, std::string name, std::strin
 	sprite->SetTexture(Core::FindTexture(textureName));
 	auto label = GetSystemManager()->Get<LabelSystem>()->Create(entity, Core::GetDevice());
 	label->SetText(name);
+	label->SetSize({ 200,100 });
 }
 
 LogoGameStackItem::LogoGameStackItem()

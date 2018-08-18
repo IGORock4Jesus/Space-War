@@ -2,7 +2,7 @@
 	"version": "1.0",
 	"galaxies": [{
 		"name": "Sagittarius",
-		"texture_path": "C:\\Users\\IGORo\\Pictures\\Positive.png",
+		"texture_path": "C:\\Users\\igoro\\Downloads\\grid-sphere.png",
 		"planets": [{
 			"name": "Noema",
 			"position": [100, 100],
@@ -18,7 +18,7 @@
 		}]
 	}, {
 		"name": "Aquarius",
-		"texture_path": "C:\\Users\\IGORo\\Pictures\\test.dds",
+		"texture_path": "C:\\Users\\igoro\\Downloads\\IMG_20180710_200729.jpg",
 		"planets": [{
 			"name": "Rahaele",
 			"position": [100, 500],

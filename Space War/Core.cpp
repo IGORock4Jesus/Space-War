@@ -100,7 +100,8 @@ namespace Core {
 	}
 	void Release() {
 		for (auto& t : textures) {
-			t.second->Release();
+			if(t.second) 
+				t.second->Release();
 		}
 		textures.clear();
 		if (device3d) {
