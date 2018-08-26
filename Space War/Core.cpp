@@ -19,6 +19,9 @@ namespace Core {
 	Desc desc;
 	std::map<std::string, LPDIRECT3DTEXTURE9> textures;
 	D3DXMATRIX viewTransform, projTransform;
+	int screenWidth, screenHeight;
+
+
 
 	LRESULT CALLBACK WndProc(HWND h, UINT m, WPARAM w, LPARAM l) {
 		switch (m)
@@ -43,15 +46,14 @@ namespace Core {
 		wc.lpszClassName = windowClass;
 		wc.style = CS_HREDRAW | CS_VREDRAW;
 		RegisterClass(&wc);
-		int screenWidth = GetSystemMetrics(SM_CXSCREEN) / 2;
-		int screenHeight = GetSystemMetrics(SM_CYSCREEN) / 2;
-		RECT r{ screenWidth - 400, screenHeight - 300, screenWidth + 400,screenHeight + 300 };
-		AdjustWindowRect(&r, WS_OVERLAPPEDWINDOW, FALSE);
-		hwnd = CreateWindow(windowClass, windowClass, WS_OVERLAPPEDWINDOW, r.left, r.top, r.right - r.left, r.bottom - r.top, HWND_DESKTOP, nullptr, hinstance, nullptr);
+		screenWidth = GetSystemMetrics(SM_CXSCREEN);
+		screenHeight = GetSystemMetrics(SM_CYSCREEN);
+
+		hwnd = CreateWindow(windowClass, windowClass, WS_POPUPWINDOW, 0, 0, screenWidth, screenHeight, HWND_DESKTOP, nullptr, hinstance, nullptr);
 		if (!hwnd)
 			return false;
 
-		ShowWindow(hwnd, SW_NORMAL);
+		ShowWindow(hwnd, SW_MAXIMIZE);
 
 		return true;
 	}
@@ -62,8 +64,8 @@ namespace Core {
 
 		D3DPRESENT_PARAMETERS pp{ 0 };
 		pp.BackBufferFormat = D3DFMT_A8R8G8B8;
-		pp.BackBufferWidth = 800;
-		pp.BackBufferHeight = 600;
+		pp.BackBufferWidth = screenWidth;
+		pp.BackBufferHeight = screenHeight;
 		pp.hDeviceWindow = hwnd;
 		pp.Windowed = true;
 		pp.SwapEffect = D3DSWAPEFFECT_DISCARD;
@@ -93,8 +95,17 @@ namespace Core {
 		if (!InitializeRenderer())
 			return false;
 
-		D3DXMatrixLookAtRH(&viewTransform, &D3DXVECTOR3(0.0f, 0.0f, -10.0f), &D3DXVECTOR3(0.0f, 0.0f, 0.0f), &D3DXVECTOR3(0.0f, -1.0f, 0.0f));
-		D3DXMatrixOrthoOffCenterRH(&projTransform, -400, 400, 300, -300, 0.1f, 100000.0f);
+		D3DXMatrixLookAtRH(&viewTransform,
+			&D3DXVECTOR3(screenWidth / 2.0f, screenHeight / 2.0f, -10.0f), 
+			&D3DXVECTOR3(screenWidth / 2.0f, screenHeight / 2.0f, 0.0f),
+			//&D3DXVECTOR3(0.0f, 0.0f, -10.0f),
+			//&D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+			&D3DXVECTOR3(0.0f, -1.0f, 0.0f));
+
+		D3DXMatrixOrthoRH(&projTransform, 
+			screenWidth, 
+			screenHeight,
+			0.1f, 100000.0f);
 
 		return true;
 	}
