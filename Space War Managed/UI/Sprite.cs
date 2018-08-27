@@ -1,4 +1,5 @@
 ﻿using SharpDX;
+using Space_War_Managed.ECS;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -10,9 +11,16 @@ namespace Space_War_Managed.UI
 {
 	class Sprite : ECS.Component
 	{
-		public Vector2 Position { get; set; }
-		public Vector2 Size { get; set; }
-		public uint Color { get; set; }
+		private Transform transform;
+
+		public Transform Transform => transform;
+		public Size2F Size { get; set; }
+		public SharpDX.Color Color { get; set; }
+
+		protected override void OnInitialize(Entity entity)
+		{
+			transform = entity.Get<Transform>();
+		}
 	}
 
 	class SpriteSystem : ECS.System<Sprite>
@@ -44,22 +52,29 @@ namespace Space_War_Managed.UI
 
 			device.VertexFormat = SharpDX.Direct3D9.VertexFormat.PositionRhw | SharpDX.Direct3D9.VertexFormat.Diffuse;
 
-			foreach (var c in Components)
+			var cs = Components;
+			foreach (var c in cs)
 			{
+				var pos = c.Transform.Postion;
+				var color = c.Color.ToArgb();
+
 				device.DrawUserPrimitives(SharpDX.Direct3D9.PrimitiveType.TriangleFan, 2, new Vertex[]
 				{
-					new Vertex{ pos = new Vector4(c.Position, 0.0f, 1.0f), color = c.Color },
-					new Vertex{
-						pos = new Vector4(c.Position + new Vector2(c.Size.X, 0.0f), 0.0f, 1.0f),
-						color = c.Color
+					new Vertex {
+						pos = new Vector4(pos, 0.0f, 1.0f),
+						color = color
 					},
-					new Vertex{
-						pos = new Vector4(c.Position + c.Size, 0.0f, 1.0f),
-						color = c.Color
+					new Vertex {
+						pos = new Vector4(pos + new Vector2(c.Size.Width, 0.0f), 0.0f, 1.0f),
+						color = color
 					},
-					new Vertex{
-						pos = new Vector4(c.Position + new Vector2(0.0f, c.Size.Y), 0.0f, 1.0f),
-						color = c.Color
+					new Vertex {
+						pos = new Vector4(pos.X + c.Size.Width, pos.Y + c.Size.Height, 0.0f, 1.0f),
+						color = color
+					},
+					new Vertex {
+						pos = new Vector4(pos + new Vector2(0.0f, c.Size.Height), 0.0f, 1.0f),
+						color = color
 					},
 				});
 			}

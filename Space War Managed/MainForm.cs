@@ -5,8 +5,10 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Space_War_Managed.UI;
 
 namespace Space_War_Managed
 {
@@ -15,7 +17,9 @@ namespace Space_War_Managed
 		Renderer renderer;
 		ECS.Manager ecs;
 		private bool isRunning;
-		private Task task;
+		private Thread task;
+		private Thread renderTask;
+		private Manager uiManager;
 		private ECS.Scene scene;
 
 		public MainForm()
@@ -29,27 +33,59 @@ namespace Space_War_Managed
 			renderer.Drawing += Renderer_Drawing;
 
 			ecs = new ECS.Manager();
+			ecs.AddSystem(new TransformSystem());
 			ecs.AddSystem(new UI.SpriteSystem(this));
+			ecs.AddSystem(new UI.MouseZoneSystem(this));
+			ecs.AddSystem(new UI.CollisionSystem());
+			ecs.AddSystem(new UI.ButtonSystem());
+			ecs.AddSystem(new UI.LabelSystem(renderer));
 
 			scene = new ECS.Scene();
 
 			isRunning = true;
-			task = Task.Run(new Action(StartAll));
+			task = new Thread(StartAll);
+			renderTask = new Thread(StartRendering);
+
+			task.Start();
+			renderTask.Start();
+
+			uiManager = new UI.Manager(ecs, scene);
 
 			Test();
 		}
 
+		private void StartRendering()
+		{
+			while (isRunning)
+			{
+				renderer.Rendering();
+				Thread.Sleep(1);
+			}
+		}
+
 		private void Test()
 		{
-			ECS.Entity entity = new ECS.Entity();
+			const int mx = 100, my = 100;
+			int mw = ClientSize.Width / mx, mh = ClientSize.Height / my;
 
-			var sprite = ecs.Get<UI.SpriteSystem>().Create(entity);
+			for (int x = 0; x < mx; x++)
+			{
+				for (int y = 0; y < my; y++)
+				{
+					string text = $"Button_{x * my + y}";
+					var button = uiManager.CreateButton(new SharpDX.Vector2(x * mw, y * mh),
+						new SharpDX.Size2F(mw, mh), text);
+					button.Get<MouseZone>().Down += MainForm_Down;
+					button.Name = text;
+					scene.Add(button);
+				}
 
-			sprite.Position = new SharpDX.Vector2(20, 20);
-			sprite.Size = new SharpDX.Vector2(100, 100);
-			sprite.Color = 0xffff0000;
+			}
+		}
 
-			scene.Add(entity);
+		private void MainForm_Down(ECS.Entity entity, SharpDX.Vector2 point)
+		{
+			MessageBox.Show($@"Mouse button down => {entity.Name} ({point})");
 		}
 
 		private void StartAll()
@@ -63,7 +99,6 @@ namespace Space_War_Managed
 
 				ecs.Update(time);
 
-				renderer.Rendering();
 			}
 		}
 
@@ -75,9 +110,9 @@ namespace Space_War_Managed
 		private void Form1_FormClosed(object sender, FormClosedEventArgs e)
 		{
 			isRunning = false;
-			task.Wait();
-
+			renderTask.Join();
 			renderer.Dispose();
+			//task.Wait();
 		}
 	}
 }

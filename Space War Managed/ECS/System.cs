@@ -14,14 +14,26 @@ namespace Space_War_Managed.ECS
 
 	class System<T> : System where T : Component, new()
 	{
-		protected List<T> Components { get; } = new List<T>();
+		List<T> components = new List<T>();
+		object locker = new object();
 
-		public virtual T Create(Entity entity)
+		protected T[] Components { get { lock (locker) return components.ToArray(); } }
+		//protected List<T> Components { get { lock (components) return components.ToList(); } }
+
+		public virtual T Create(Entity entity, params object[] ps)
 		{
 			T t = new T();
-			t.Initialize(entity);
-			Components.Add(t);
+			Add(entity, t);
+			if (ps.Length != 0)
+				t.InitialArguments(ps);
 			return t;
+		}
+
+		public virtual void Add(Entity entity, T component)
+		{
+			component.Initialize(entity);
+			lock (locker) components.Add(component);
+			entity.Add(component);
 		}
 	}
 }

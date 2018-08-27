@@ -11,11 +11,17 @@ namespace Space_War_Managed.ECS
 		public Entity Entity { get; private set; }
 
 		protected virtual void OnInitialize(Entity entity) { }
+		protected virtual void OnInitialArguments(params object[] ps) { }
 
 		public void Initialize(Entity entity)
 		{
 			Entity = entity;
 			OnInitialize(entity);
+		}
+
+		internal void InitialArguments(params object[] ps)
+		{
+			OnInitialArguments(ps);
 		}
 	}
 }

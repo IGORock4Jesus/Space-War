@@ -20,7 +20,7 @@ namespace Space_War_Managed.ECS
 
 		public T Get<T>() where T : System
 		{
-			return systems.FirstOrDefault(w => w is T) as T;
+			return systems.First(w => w is T) as T;
 		}
 
 		public void Render(Renderer renderer)

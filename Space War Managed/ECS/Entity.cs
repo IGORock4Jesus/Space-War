@@ -18,5 +18,10 @@ namespace Space_War_Managed.ECS
 
 			components.Add(component);
 		}
+
+		internal T Get<T>() where T : Component
+		{
+			return components.First(w => w is T) as T;
+		}
 	}
 }
