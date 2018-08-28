@@ -52,6 +52,7 @@ namespace Space_War_Managed.UI
 		internal void DoLeave(Vector2 point)
 		{
 			Leave?.Invoke(Entity, point);
+			IsMouseOver = false;
 		}
 
 		internal void DoWheel(Vector2 point, int wheel)
@@ -68,17 +69,17 @@ namespace Space_War_Managed.UI
 
 	class MouseZoneSystem : System<MouseZone>
 	{
-		public MouseZoneSystem(MainForm form)
+		public MouseZoneSystem(Input input)
 		{
-			form.MouseDown += Form_MouseDown;
-			form.MouseUp += Form_MouseUp;
-			form.MouseMove += Form_MouseMove;
-			form.MouseWheel += Form_MouseWheel;
+			input.MouseDown += Form_MouseDown;
+			input.MouseUp += Form_MouseUp;
+			input.MouseMove += Form_MouseMove;
+			input.MouseWheel += Form_MouseWheel;
 		}
 
-		private void Form_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
+		private void Form_MouseDown(Input.Mouse mouse)
 		{
-			var point = new Vector2(e.X, e.Y);
+			var point = new Vector2(mouse.Cursor.X, mouse.Cursor.Y);
 			foreach (var c in Components)
 			{
 				if (c.Test(point))
@@ -88,9 +89,9 @@ namespace Space_War_Managed.UI
 			}
 		}
 
-		private void Form_MouseUp(object sender, System.Windows.Forms.MouseEventArgs e)
+		private void Form_MouseUp(Input.Mouse mouse)
 		{
-			var point = new Vector2(e.X, e.Y);
+			var point = new Vector2(mouse.Cursor.X, mouse.Cursor.Y);
 			foreach (var c in Components)
 			{
 				if (c.Test(point))
@@ -100,9 +101,9 @@ namespace Space_War_Managed.UI
 			}
 		}
 
-		private void Form_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
+		private void Form_MouseMove(Input.Mouse mouse)
 		{
-			var point = new Vector2(e.X, e.Y);
+			var point = new Vector2(mouse.Cursor.X, mouse.Cursor.Y);
 			foreach (var c in Components)
 			{
 				var isOver = c.IsMouseOver;
@@ -121,10 +122,10 @@ namespace Space_War_Managed.UI
 			}
 		}
 
-		private void Form_MouseWheel(object sender, System.Windows.Forms.MouseEventArgs e)
+		private void Form_MouseWheel(Input.Mouse mouse)
 		{
-			var point = new Vector2(e.X, e.Y);
-			int wheel = e.Delta / SystemInformation.MouseWheelScrollDelta;
+			var point = new Vector2(mouse.Cursor.X, mouse.Cursor.Y);
+			int wheel = mouse.Wheel;
 			foreach (var c in Components)
 			{
 				if (c.Test(point))

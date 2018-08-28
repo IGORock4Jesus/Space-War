@@ -53,6 +53,7 @@ namespace Space_War_Managed.UI
 		{
 			sprite.Color = Color.Green;
 			label.Color = Color.White;
+			isPressed = false;
 		}
 
 		private void MouseZone_Enter(Entity entity, SharpDX.Vector2 point)

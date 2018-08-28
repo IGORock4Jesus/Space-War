@@ -39,7 +39,7 @@ namespace Space_War_Managed.UI
 	class LabelSystem : ECS.System<Label>
 	{
 		private readonly Renderer renderer;
-		Dictionary<FontDescription, Font> fonts = new Dictionary<FontDescription, Font>();
+		Dictionary<FontDescription, Graphics.Font> fonts = new Dictionary<FontDescription, Graphics.Font>();
 
 
 		public LabelSystem(Renderer renderer)
@@ -76,14 +76,16 @@ namespace Space_War_Managed.UI
 					Width = 0
 				};
 
-				
-				if(!fonts.TryGetValue(description, out Font font))
+
+				if (!fonts.TryGetValue(description, out Graphics.Font font))
 				{
-					font = new Font(device, description);
+					font = new Graphics.Font(renderer, description);
 					fonts.Add(description, font);
 				}
-				
-				font?.DrawText(null, c.Text, (int)c.Transform.Postion.X, (int)c.Transform.Postion.Y, c.Color);
+
+				var s = c.Entity.Get<Sprite>().Size;
+
+				font?.DrawText(c.Text, new Rectangle((int)c.Transform.Postion.X, (int)c.Transform.Postion.Y, (int)s.Width, (int)s.Height), FontDrawFlags.Center | FontDrawFlags.VerticalCenter, c.Color);
 
 			}
 		}

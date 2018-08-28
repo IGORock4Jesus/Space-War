@@ -34,6 +34,20 @@ namespace Space_War_Managed.ECS
 			component.Initialize(entity);
 			lock (locker) components.Add(component);
 			entity.Add(component);
+			component.Releasing += Component_Releasing;
+		}
+
+		private void Component_Releasing(Component sender)
+		{
+			Remove(sender);
+		}
+
+		public void Remove(Component component)
+		{
+			lock (locker)
+			{
+				components.Remove(component as T);
+			}
 		}
 	}
 }

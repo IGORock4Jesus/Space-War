@@ -21,6 +21,8 @@ namespace Space_War_Managed
 		public event DrawHandler Drawing;
 		public Device Device => device;
 
+		public event DrawHandler BeforeReset, AfterReset;
+
 
 		public Renderer(MainForm form)
 		{
@@ -66,6 +68,7 @@ namespace Space_War_Managed
 
 		private void OnPostReset()
 		{
+			AfterReset?.Invoke(device);
 			canDraw = true;
 		}
 
@@ -76,6 +79,7 @@ namespace Space_War_Managed
 			{
 				Thread.Sleep(1);
 			}
+			BeforeReset?.Invoke(device);
 		}
 
 		public void Rendering()

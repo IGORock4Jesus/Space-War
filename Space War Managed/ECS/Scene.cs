@@ -20,5 +20,11 @@ namespace Space_War_Managed.ECS
 			if (entities.Any(w => w == entity)) return;
 			entities.Add(entity);
 		}
+
+		internal void Remove(Entity entity)
+		{
+			entities.Remove(entity);
+			entity.Release();
+		}
 	}
 }

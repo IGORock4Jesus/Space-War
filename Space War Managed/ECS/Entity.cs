@@ -23,5 +23,10 @@ namespace Space_War_Managed.ECS
 		{
 			return components.First(w => w is T) as T;
 		}
+
+		public void Release()
+		{
+			components.ForEach(w => w.Release());
+		}
 	}
 }

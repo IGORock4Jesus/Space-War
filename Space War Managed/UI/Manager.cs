@@ -43,5 +43,47 @@ namespace Space_War_Managed.UI
 
 			return entity;
 		}
+
+		public ECS.Entity CreatePanel(Vector2 position, Size2F size, Color color)
+		{
+			ECS.Entity entity = new ECS.Entity();
+
+			var transform = ecs.Get<TransformSystem>().Create(entity);
+			transform.Postion = position;
+
+			var collider = new UI.RectCollision
+			{
+				Rect = new RectangleF { Location = position, Size = size }
+			};
+			ecs.Get<CollisionSystem>().Add(entity, collider);
+
+			var sprite = ecs.Get<SpriteSystem>().Create(entity);
+			sprite.Size = size;
+			sprite.Color = color;
+
+			return entity;
+		}
+
+		public ECS.Entity CreateGalaxyConstructor(Vector2 position, Size2F size)
+		{
+			ECS.Entity entity = new ECS.Entity();
+
+			var transform = ecs.Get<TransformSystem>().Create(entity);
+			transform.Postion = position;
+
+			var collider = new UI.RectCollision
+			{
+				Rect = new RectangleF { Location = position, Size = size }
+			};
+			ecs.Get<CollisionSystem>().Add(entity, collider);
+
+			var sprite = ecs.Get<SpriteSystem>().Create(entity);
+			sprite.Size = size;
+			sprite.Color = Color.DarkGray;
+
+			ecs.Get<MouseZoneSystem>().Create(entity);
+
+			return entity;
+		}
 	}
 }

@@ -21,6 +21,8 @@ namespace Space_War_Managed
 		private Thread renderTask;
 		private Manager uiManager;
 		private ECS.Scene scene;
+		GameStack gameStack;
+		Input input;
 
 		public MainForm()
 		{
@@ -29,16 +31,20 @@ namespace Space_War_Managed
 
 		private void Form1_Load(object sender, EventArgs e)
 		{
+			input = new Input(this);
+
 			renderer = new Renderer(this);
 			renderer.Drawing += Renderer_Drawing;
 
 			ecs = new ECS.Manager();
 			ecs.AddSystem(new TransformSystem());
 			ecs.AddSystem(new UI.SpriteSystem(this));
-			ecs.AddSystem(new UI.MouseZoneSystem(this));
+			ecs.AddSystem(new UI.MouseZoneSystem(input));
 			ecs.AddSystem(new UI.CollisionSystem());
 			ecs.AddSystem(new UI.ButtonSystem());
 			ecs.AddSystem(new UI.LabelSystem(renderer));
+			ecs.AddSystem(new UI.GalaxyConstructorSystem());
+			ecs.AddSystem(new ImageSystem(this, renderer));
 
 			scene = new ECS.Scene();
 
@@ -46,10 +52,11 @@ namespace Space_War_Managed
 			task = new Thread(StartAll);
 			renderTask = new Thread(StartRendering);
 
+			uiManager = new UI.Manager(ecs, scene);
+			gameStack = new GameStack(scene, ecs, uiManager, input, this);
+
 			task.Start();
 			renderTask.Start();
-
-			uiManager = new UI.Manager(ecs, scene);
 
 			Test();
 		}
@@ -65,22 +72,7 @@ namespace Space_War_Managed
 
 		private void Test()
 		{
-			const int mx = 100, my = 100;
-			int mw = ClientSize.Width / mx, mh = ClientSize.Height / my;
-
-			for (int x = 0; x < mx; x++)
-			{
-				for (int y = 0; y < my; y++)
-				{
-					string text = $"Button_{x * my + y}";
-					var button = uiManager.CreateButton(new SharpDX.Vector2(x * mw, y * mh),
-						new SharpDX.Size2F(mw, mh), text);
-					button.Get<MouseZone>().Down += MainForm_Down;
-					button.Name = text;
-					scene.Add(button);
-				}
-
-			}
+			gameStack.Push(new MainMenu());
 		}
 
 		private void MainForm_Down(ECS.Entity entity, SharpDX.Vector2 point)
@@ -98,13 +90,14 @@ namespace Space_War_Managed
 				oldTime = newTime;
 
 				ecs.Update(time);
-
+				gameStack.Update(time);
 			}
 		}
 
 		private void Renderer_Drawing(SharpDX.Direct3D9.Device device)
 		{
 			ecs.Render(renderer);
+			gameStack.Render(renderer);
 		}
 
 		private void Form1_FormClosed(object sender, FormClosedEventArgs e)
