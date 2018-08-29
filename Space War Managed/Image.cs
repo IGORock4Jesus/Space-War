@@ -1,4 +1,5 @@
 ﻿using SharpDX;
+using SharpDX.Direct3D9;
 using Space_War_Managed.ECS;
 using Space_War_Managed.Graphics;
 using System;
@@ -56,6 +57,8 @@ namespace Space_War_Managed
 			device.VertexFormat = SharpDX.Direct3D9.VertexFormat.PositionRhw | SharpDX.Direct3D9.VertexFormat.Texture1;
 
 			device.SetRenderState(SharpDX.Direct3D9.RenderState.AlphaBlendEnable, true);
+			device.SetRenderState(SharpDX.Direct3D9.RenderState.SourceBlend, Blend.SourceAlpha);
+			device.SetRenderState(RenderState.DestinationBlend, Blend.InverseSourceAlpha);
 
 			var cs = Components;
 			foreach (var c in cs)
@@ -87,9 +90,9 @@ namespace Space_War_Managed
 			device.SetRenderState(SharpDX.Direct3D9.RenderState.AlphaBlendEnable, false);
 		}
 
-		internal Texture LoadFile(string filename)
+		internal Graphics.Texture LoadFile(string filename)
 		{
-			return new Texture(renderer, filename);
+			return new Graphics.Texture(renderer, filename);
 		}
 	}
 }
